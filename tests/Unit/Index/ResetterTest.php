@@ -58,7 +58,7 @@ class ResetterTest extends TestCase
         );
     }
 
-    public function testResetAllIndexes()
+    public function testResetAllIndexes(): void
     {
         $indexName = 'index1';
         $indexConfig = new IndexConfig([
@@ -88,7 +88,7 @@ class ResetterTest extends TestCase
         $this->resetter->resetAllIndexes();
     }
 
-    public function testResetIndex()
+    public function testResetIndex(): void
     {
         $indexConfig = new IndexConfig([
             'name' => 'index1',
@@ -112,7 +112,7 @@ class ResetterTest extends TestCase
         $this->resetter->resetIndex('index1');
     }
 
-    public function testResetIndexWithDifferentNameAndAlias()
+    public function testResetIndexWithDifferentNameAndAlias(): void
     {
         $indexConfig = new IndexConfig([
             'name' => 'index1',
@@ -142,7 +142,7 @@ class ResetterTest extends TestCase
         $this->resetter->resetIndex('index1');
     }
 
-    public function testFailureWhenMissingIndexDoesntDispatch()
+    public function testFailureWhenMissingIndexDoesntDispatch(): void
     {
         $this->configManager->expects($this->once())
             ->method('getIndexConfiguration')
@@ -158,7 +158,7 @@ class ResetterTest extends TestCase
         $this->resetter->resetIndex('nonExistant');
     }
 
-    public function testPostPopulateWithoutAlias()
+    public function testPostPopulateWithoutAlias(): void
     {
         $this->mockIndex('index', new IndexConfig([
             'name' => 'index',
@@ -177,7 +177,7 @@ class ResetterTest extends TestCase
         $this->resetter->switchIndexAlias('index');
     }
 
-    public function testPostPopulate()
+    public function testPostPopulate(): void
     {
         $indexConfig = new IndexConfig([
             'name' => 'index1',
@@ -196,12 +196,12 @@ class ResetterTest extends TestCase
         $this->resetter->switchIndexAlias('index');
     }
 
-    public function testResetterImplementsResetterInterface()
+    public function testResetterImplementsResetterInterface(): void
     {
         $this->assertInstanceOf(ResetterInterface::class, $this->resetter);
     }
 
-    private function dispatcherExpects(array $events)
+    private function dispatcherExpects(array $events): void
     {
         $expectation = $this->dispatcher->expects($this->exactly(\count($events)))
             ->method('dispatch')

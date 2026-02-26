@@ -15,13 +15,12 @@ use Elastic\Transport\NodePool\SimpleNodePool;
 use FOS\ElasticaBundle\Elastica\Client;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class ClientTest extends WebTestCase
 {
-    public function testContainerSource()
+    public function testContainerSource(): void
     {
         self::bootKernel(['test_case' => 'Basic']);
 

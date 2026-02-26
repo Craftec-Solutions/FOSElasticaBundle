@@ -27,10 +27,9 @@ use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class ProfilerTest extends WebTestCase
 {
     /** @var ElasticaLogger */
@@ -42,7 +41,7 @@ class ProfilerTest extends WebTestCase
     /** @var ElasticaDataCollector */
     private $collector;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->logger = new ElasticaLogger($this->createMock(LoggerInterface::class), true);
         $this->collector = new ElasticaDataCollector($this->logger);
@@ -69,10 +68,8 @@ class ProfilerTest extends WebTestCase
         $this->twig->addRuntimeLoader($loaderMock);
     }
 
-    /**
-     * @dataProvider queryProvider
-     */
-    public function testRender($query)
+    #[\PHPUnit\Framework\Attributes\DataProvider('queryProvider')]
+    public function testRender($query): void
     {
         $connection = [
             'host' => 'localhost',
@@ -96,7 +93,7 @@ class ProfilerTest extends WebTestCase
         $this->assertStringContainsString('localhost:9200', $output);
     }
 
-    public function queryProvider()
+    public static function queryProvider()
     {
         return [
             [\json_decode('{"query":{"match_all":{}}}', true)],

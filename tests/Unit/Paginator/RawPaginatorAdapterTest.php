@@ -21,46 +21,46 @@ use FOS\ElasticaBundle\Tests\Unit\UnitTestHelper;
  */
 class RawPaginatorAdapterTest extends UnitTestHelper
 {
-    public function testGetTotalHits()
+    public function testGetTotalHits(): void
     {
         $adapter = $this->createAdapterWithCount(123);
-        $this->assertEquals(123, $adapter->getTotalHits());
+        $this->assertSame(123, $adapter->getTotalHits());
 
         $adapter = $this->createAdapterWithCount(123, 100);
-        $this->assertEquals(100, $adapter->getTotalHits());
+        $this->assertSame(100, $adapter->getTotalHits());
     }
 
-    public function testGetTotalHitsGenuineTotal()
+    public function testGetTotalHitsGenuineTotal(): void
     {
         $adapter = $this->createAdapterWithCount(123);
-        $this->assertEquals(123, $adapter->getTotalHits(true));
+        $this->assertSame(123, $adapter->getTotalHits(true));
 
         $adapter = $this->createAdapterWithCount(123, 100);
-        $this->assertEquals(123, $adapter->getTotalHits(true));
+        $this->assertSame(123, $adapter->getTotalHits(true));
     }
 
-    public function testGetAggregations()
+    public function testGetAggregations(): void
     {
         $value = [];
         $adapter = $this->createAdapterWithSearch('getAggregations', $value);
-        $this->assertEquals($value, $adapter->getAggregations());
+        $this->assertSame($value, $adapter->getAggregations());
     }
 
-    public function testGetSuggests()
+    public function testGetSuggests(): void
     {
         $value = [];
         $adapter = $this->createAdapterWithSearch('getSuggests', $value);
-        $this->assertEquals($value, $adapter->getSuggests());
+        $this->assertSame($value, $adapter->getSuggests());
     }
 
-    public function testGetMaxScore()
+    public function testGetMaxScore(): void
     {
         $value = 1.0;
         $adapter = $this->createAdapterWithSearch('getMaxScore', $value);
-        $this->assertEquals($value, $adapter->getMaxScore());
+        $this->assertSame($value, $adapter->getMaxScore());
     }
 
-    public function testGetQuery()
+    public function testGetQuery(): void
     {
         $resultSet = $this->mockResultSet();
 
@@ -69,7 +69,7 @@ class RawPaginatorAdapterTest extends UnitTestHelper
         $searchable = $this->mockSearchable();
 
         $adapter = new RawPaginatorAdapter($searchable, $query, $options);
-        $this->assertEquals($query, $adapter->getQuery());
+        $this->assertSame($query, $adapter->getQuery());
     }
 
     protected function mockResultSet()
@@ -79,7 +79,7 @@ class RawPaginatorAdapterTest extends UnitTestHelper
         return $this
             ->getMockBuilder(ResultSet::class)
             ->disableOriginalConstructor()
-            ->setMethods($methods)
+            ->onlyMethods($methods)
             ->getMock()
         ;
     }

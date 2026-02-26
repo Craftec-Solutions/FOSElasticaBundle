@@ -70,7 +70,7 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(static function (ContainerBuilder $container): void {
             $container->setParameter('fos_elastica.host', $_SERVER['FOS_ELASTICA_HOST']);
             $container->setParameter('fos_elastica.port', $_SERVER['FOS_ELASTICA_PORT']);
         });

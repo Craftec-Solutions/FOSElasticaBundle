@@ -12,13 +12,12 @@
 namespace FOS\ElasticaBundle\Tests\Functional;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class SerializerTest extends WebTestCase
 {
-    public function testMappingIteratorToArrayField()
+    public function testMappingIteratorToArrayField(): void
     {
         static::bootKernel(['test_case' => 'Serializer']);
         $persister = self::getContainer()->get('fos_elastica.object_persister.index');
@@ -37,7 +36,7 @@ class SerializerTest extends WebTestCase
     /**
      * Tests that the serialize_null configuration attribute works.
      */
-    public function testWithNullValues()
+    public function testWithNullValues(): void
     {
         static::bootKernel(['test_case' => 'Serializer']);
 
@@ -62,7 +61,7 @@ class SerializerTest extends WebTestCase
         $this->assertNull($documentData['field1']);
     }
 
-    public function testUnmappedType()
+    public function testUnmappedType(): void
     {
         static::bootKernel(['test_case' => 'Serializer']);
         $resetter = self::getContainer()->get('fos_elastica.resetter');

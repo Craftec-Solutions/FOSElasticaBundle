@@ -46,7 +46,7 @@ class DeleteCommandTest extends TestCase
         $this->command = new DeleteCommand($this->indexManagerMock);
     }
 
-    public function testDeleteAllIndexes()
+    public function testDeleteAllIndexes(): void
     {
         $input = $this->createMock(InputInterface::class);
         $input->expects($this->once())->method('getOption')->with('index')->willReturn(null);
@@ -80,7 +80,7 @@ class DeleteCommandTest extends TestCase
         );
     }
 
-    public function testDeleteIndex()
+    public function testDeleteIndex(): void
     {
         $input = $this->createMock(InputInterface::class);
         $input->expects($this->once())->method('getOption')->with('index')->willReturn('index_name');

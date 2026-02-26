@@ -84,9 +84,7 @@ abstract class AbstractElasticaToModelTransformer extends BaseTransformer
         $propertyAccessor = $this->propertyAccessor;
         $identifier = $this->options['identifier'];
         if (!$this->options['ignore_missing'] && $objectsCnt < $elasticaObjectsCnt) {
-            $missingIds = \array_diff($ids, \array_map(static function ($object) use ($propertyAccessor, $identifier) {
-                return $propertyAccessor->getValue($object, $identifier);
-            }, $objects));
+            $missingIds = \array_diff($ids, \array_map(static fn ($object) => $propertyAccessor->getValue($object, $identifier), $objects));
 
             throw new \RuntimeException(\sprintf('Cannot find corresponding Doctrine objects (%d) for all Elastica results (%d). Missing IDs: %s. IDs: %s', $objectsCnt, $elasticaObjectsCnt, \implode(', ', $missingIds), \implode(', ', $ids)));
         }

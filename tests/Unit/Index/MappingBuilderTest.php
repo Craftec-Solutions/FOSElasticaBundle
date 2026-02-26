@@ -83,7 +83,7 @@ class MappingBuilderTest extends TestCase
         $this->builder = new MappingBuilder($dispatcher);
     }
 
-    public function testMappingBuilderStoreProperty()
+    public function testMappingBuilderStoreProperty(): void
     {
         $mapping = $this->builder->buildMapping(null, $this->indexConfig);
 
@@ -94,7 +94,7 @@ class MappingBuilderTest extends TestCase
         $this->assertFalse($mapping['properties']['unstored']['store']);
     }
 
-    public function testBuildIndexTemplateMapping()
+    public function testBuildIndexTemplateMapping(): void
     {
         $config = new IndexTemplateConfig(
             ['index_patterns' => ['index_template_*'], 'name' => 'some_template', 'config' => [], 'mapping' => $this->indexConfig->getMapping()]

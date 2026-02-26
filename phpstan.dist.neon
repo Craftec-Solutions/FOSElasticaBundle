@@ -3,15 +3,7 @@ includes:
 parameters:
     level: 5
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: true
     paths:
         - src
-#        - tests
     ignoreErrors:
-#        - message: /Trying to mock an undefined method/
-#          path: tests/
-#        - message: '/Property .* is never read, only written/'
-#          path: tests/
-#        - message: '/Call to method PHPUnit\\Framework\\Assert::assert\w*\(\).*will always evaluate to (true|false)/'
-#          path: tests/
-#        - message: '/Parameter #\d \$\w+ of class .+ constructor expects array[{<].+[}>], array{.*} given/'
-#          path: tests/

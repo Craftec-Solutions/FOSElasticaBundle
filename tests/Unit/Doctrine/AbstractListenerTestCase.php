@@ -58,7 +58,7 @@ class ConditionalUpdateEntity extends Entity
  */
 abstract class AbstractListenerTestCase extends TestCase
 {
-    public function testObjectInsertedOnPersist()
+    public function testObjectInsertedOnPersist(): void
     {
         $entity = new Entity(1);
         $persister = $this->getMockPersister($entity, 'index');
@@ -78,7 +78,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testPersistDeferred()
+    public function testPersistDeferred(): void
     {
         $entity = new Entity(1);
         $persister = $this->getMockPersister($entity, 'index');
@@ -95,7 +95,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testNonIndexableObjectNotInsertedOnPersist()
+    public function testNonIndexableObjectNotInsertedOnPersist(): void
     {
         $entity = new Entity(1);
         $persister = $this->getMockPersister($entity, 'index');
@@ -117,7 +117,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testObjectReplacedOnUpdate()
+    public function testObjectReplacedOnUpdate(): void
     {
         $entity = new Entity(1);
         $persister = $this->getMockPersister($entity, 'index');
@@ -140,7 +140,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testNonIndexableObjectRemovedOnUpdate()
+    public function testNonIndexableObjectRemovedOnUpdate(): void
     {
         $classMetadata = $this->getMockClassMetadata();
         $objectManager = $this->getMockObjectManager();
@@ -152,14 +152,14 @@ abstract class AbstractListenerTestCase extends TestCase
 
         $objectManager->expects($this->any())
             ->method('getClassMetadata')
-            ->with(\get_class($entity))
-            ->will($this->returnValue($classMetadata))
+            ->with($entity::class)
+            ->willReturn($classMetadata)
         ;
 
         $classMetadata->expects($this->any())
             ->method('getFieldValue')
             ->with($entity, 'id')
-            ->will($this->returnValue($entity->getId()))
+            ->willReturn($entity->getId())
         ;
 
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
@@ -179,7 +179,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testObjectDeletedOnRemove()
+    public function testObjectDeletedOnRemove(): void
     {
         $classMetadata = $this->getMockClassMetadata();
         $objectManager = $this->getMockObjectManager();
@@ -191,14 +191,14 @@ abstract class AbstractListenerTestCase extends TestCase
 
         $objectManager->expects($this->any())
             ->method('getClassMetadata')
-            ->with(\get_class($entity))
-            ->will($this->returnValue($classMetadata))
+            ->with($entity::class)
+            ->willReturn($classMetadata)
         ;
 
         $classMetadata->expects($this->any())
             ->method('getFieldValue')
             ->with($entity, 'id')
-            ->will($this->returnValue($entity->getId()))
+            ->willReturn($entity->getId())
         ;
 
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
@@ -214,7 +214,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testObjectWithNonStandardIdentifierDeletedOnRemove()
+    public function testObjectWithNonStandardIdentifierDeletedOnRemove(): void
     {
         $classMetadata = $this->getMockClassMetadata();
         $objectManager = $this->getMockObjectManager();
@@ -227,14 +227,14 @@ abstract class AbstractListenerTestCase extends TestCase
 
         $objectManager->expects($this->any())
             ->method('getClassMetadata')
-            ->with(\get_class($entity))
-            ->will($this->returnValue($classMetadata))
+            ->with($entity::class)
+            ->willReturn($classMetadata)
         ;
 
         $classMetadata->expects($this->any())
             ->method('getFieldValue')
             ->with($entity, 'identifier')
-            ->will($this->returnValue($entity->getId()))
+            ->willReturn($entity->getId())
         ;
 
         $listener = $this->createListener($persister, $indexable, ['identifier' => 'identifier', 'indexName' => 'index']);
@@ -250,7 +250,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testShouldPersistOnKernelTerminateIfDeferIsTrue()
+    public function testShouldPersistOnKernelTerminateIfDeferIsTrue(): void
     {
         $entity = new Entity(1);
         $persister = $this->getMockPersister($entity, 'index');
@@ -270,7 +270,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->onTerminate();
     }
 
-    public function testConditionalUpdateObjectInsertedOnPersistWhenShouldBeUpdatedIsTrue()
+    public function testConditionalUpdateObjectInsertedOnPersistWhenShouldBeUpdatedIsTrue(): void
     {
         $entity = new ConditionalUpdateEntity(1, true);
         $persister = $this->getMockPersister($entity, 'index');
@@ -290,7 +290,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testConditionalUpdateObjectNotInsertedOnPersistWhenShouldBeUpdatedIsFalse()
+    public function testConditionalUpdateObjectNotInsertedOnPersistWhenShouldBeUpdatedIsFalse(): void
     {
         $entity = new ConditionalUpdateEntity(1, false);
         $persister = $this->getMockPersister($entity, 'index');
@@ -309,7 +309,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testConditionalUpdateObjectReplacedOnUpdateWhenShouldBeUpdatedIsTrue()
+    public function testConditionalUpdateObjectReplacedOnUpdateWhenShouldBeUpdatedIsTrue(): void
     {
         $entity = new ConditionalUpdateEntity(1, true);
         $persister = $this->getMockPersister($entity, 'index');
@@ -332,7 +332,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postFlush($eventArgs);
     }
 
-    public function testConditionalUpdateObjectNotReplacedOnUpdateWhenShouldBeUpdatedIsFalse()
+    public function testConditionalUpdateObjectNotReplacedOnUpdateWhenShouldBeUpdatedIsFalse(): void
     {
         $entity = new ConditionalUpdateEntity(1, false);
         $persister = $this->getMockPersister($entity, 'index');
@@ -399,13 +399,13 @@ abstract class AbstractListenerTestCase extends TestCase
         $mock->expects($this->any())
             ->method('handlesObject')
             ->with($object)
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $index = $this->createMock(Index::class);
         $index->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue($indexName))
+            ->willReturn($indexName)
         ;
 
         return $mock;
@@ -419,7 +419,7 @@ abstract class AbstractListenerTestCase extends TestCase
             $mock->expects($this->once())
                 ->method('isObjectIndexable')
                 ->with($indexName, $object)
-                ->will($this->returnValue($return))
+                ->willReturn($return)
             ;
         }
 

@@ -46,11 +46,11 @@ class ResetCommandTest extends TestCase
         $this->command = new ResetCommand($this->indexManager, $this->resetter);
     }
 
-    public function testResetAllIndexes()
+    public function testResetAllIndexes(): void
     {
         $this->indexManager->expects($this->any())
             ->method('getAllIndexes')
-            ->will($this->returnValue(['index1' => true, 'index2' => true]))
+            ->willReturn(['index1' => true, 'index2' => true])
         ;
 
         $this->resetter->expects($this->exactly(2))
@@ -67,7 +67,7 @@ class ResetCommandTest extends TestCase
         );
     }
 
-    public function testResetIndex()
+    public function testResetIndex(): void
     {
         $this->indexManager->expects($this->never())
             ->method('getAllIndexes')

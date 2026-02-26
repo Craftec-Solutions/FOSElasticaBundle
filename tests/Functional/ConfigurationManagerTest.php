@@ -15,13 +15,12 @@ use FOS\ElasticaBundle\Configuration\ConfigManager;
 use FOS\ElasticaBundle\Configuration\IndexConfig;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class ConfigurationManagerTest extends WebTestCase
 {
-    public function testContainerSource()
+    public function testContainerSource(): void
     {
         static::bootKernel(['test_case' => 'Basic']);
         /** @var ConfigManager $manager */

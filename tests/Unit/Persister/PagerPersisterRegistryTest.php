@@ -21,14 +21,14 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  */
 class PagerPersisterRegistryTest extends TestCase
 {
-    public function testShouldBeFinal()
+    public function testShouldBeFinal(): void
     {
         $rc = new \ReflectionClass(PagerPersisterRegistry::class);
 
         $this->assertTrue($rc->isFinal());
     }
 
-    public function testThrowsIfThereIsNoSuchEntryInNameToServiceIdMap()
+    public function testThrowsIfThereIsNoSuchEntryInNameToServiceIdMap(): void
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
         $serviceLocator->expects($this->once())->method('has')->with('the_name')->willReturn(false);
@@ -39,7 +39,7 @@ class PagerPersisterRegistryTest extends TestCase
         (new PagerPersisterRegistry($serviceLocator))->getPagerPersister('the_name');
     }
 
-    public function testThrowsIfRelatedServiceDoesNotImplementPagerPersisterInterface()
+    public function testThrowsIfRelatedServiceDoesNotImplementPagerPersisterInterface(): void
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
         $serviceLocator->expects($this->once())->method('has')->with('the_name')->willReturn(true);
@@ -51,7 +51,7 @@ class PagerPersisterRegistryTest extends TestCase
         (new PagerPersisterRegistry($serviceLocator))->getPagerPersister('the_name');
     }
 
-    public function testShouldReturnPagerPersisterByGivenName()
+    public function testShouldReturnPagerPersisterByGivenName(): void
     {
         $pagerPersisterMock = $this->createPagerPersisterMock();
 

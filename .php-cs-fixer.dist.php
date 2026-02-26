@@ -10,25 +10,26 @@ file that was distributed with this source code.
 EOF;
 
 return (new PhpCsFixer\Config())
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
+    ->setRiskyAllowed(true)
     ->setRules([
-        '@PHP82Migration' => true,
-        '@PSR2' => true,
-        '@PhpCsFixer' => true,
+        '@PER-CS' => true,
+        '@PER-CS:risky' => true,
+        '@PHP8x2Migration' => true,
+        '@PHP8x2Migration:risky' => true,
+        '@PHPUnit100Migration:risky' => true,
         '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'declare_strict_types' => false,
         'header_comment' => ['header' => $header],
-        'is_null' => true,
-        'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
-        'method_chaining_indentation' => false,
         'native_constant_invocation' => true,
         'native_function_invocation' => [
             'include' => ['@all'],
         ],
-        'no_alias_functions' => true,
-        'nullable_type_declaration_for_default_null_value' => true,
-        'ordered_imports' => true,
-        'php_unit_test_class_requires_covers' => false,
-        'phpdoc_no_empty_return' => false,
-        'visibility_required' => ['elements' => ['property', 'method', 'const']],
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'strict_comparison' => true,
+        'strict_param' => true,
     ])
     ->setUsingCache(true)
     ->setFinder(

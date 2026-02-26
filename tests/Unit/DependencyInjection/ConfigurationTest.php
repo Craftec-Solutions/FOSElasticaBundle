@@ -30,7 +30,7 @@ class ConfigurationTest extends TestCase
         $this->processor = new Processor();
     }
 
-    public function testUnconfiguredConfiguration()
+    public function testUnconfiguredConfiguration(): void
     {
         $configuration = $this->getConfigs([]);
 
@@ -46,7 +46,7 @@ class ConfigurationTest extends TestCase
         ], $configuration);
     }
 
-    public function testClientConfiguration()
+    public function testClientConfiguration(): void
     {
         $configuration = $this->getConfigs([
             'clients' => [
@@ -77,7 +77,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==', $configuration['clients']['clustered']['headers'][0]);
     }
 
-    public function testLogging()
+    public function testLogging(): void
     {
         $configuration = $this->getConfigs([
             'clients' => [
@@ -107,7 +107,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('custom.service', $configuration['clients']['logging_custom']['logger']);
     }
 
-    public function testSlashIsAddedAtTheEndOfServerUrl()
+    public function testSlashIsAddedAtTheEndOfServerUrl(): void
     {
         $config = [
             'clients' => [
@@ -119,7 +119,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('http://www.github.com/', $configuration['clients']['default']['hosts'][0]);
     }
 
-    public function testIndexConfig()
+    public function testIndexConfig(): void
     {
         $this->getConfigs([
             'clients' => [
@@ -153,7 +153,7 @@ class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testUnconfiguredIndex()
+    public function testUnconfiguredIndex(): void
     {
         $configuration = $this->getConfigs([
             'clients' => [
@@ -167,7 +167,7 @@ class ConfigurationTest extends TestCase
         $this->assertArrayHasKey('properties', $configuration['indexes']['test']);
     }
 
-    public function testNestedProperties()
+    public function testNestedProperties(): void
     {
         $this->getConfigs([
             'clients' => [
@@ -200,7 +200,7 @@ class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testTimeoutConfig()
+    public function testTimeoutConfig(): void
     {
         $configuration = $this->getConfigs([
             'clients' => [
@@ -214,7 +214,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame(123, $configuration['clients']['simple_timeout']['timeout']);
     }
 
-    public function testHttpErrorCodesConfig()
+    public function testHttpErrorCodesConfig(): void
     {
         // test defaults
         $configuration = $this->getConfigs([
@@ -238,7 +238,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame(['HTTP_ERROR_CODE'], $connection['http_error_codes']);
     }
 
-    public function testIndexTemplates()
+    public function testIndexTemplates(): void
     {
         $configuration = $this->getConfigs(
             [

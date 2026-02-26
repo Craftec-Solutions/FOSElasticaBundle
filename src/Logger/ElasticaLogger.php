@@ -57,7 +57,7 @@ class ElasticaLogger extends AbstractLogger
                 $jsonStrings = \explode("\n", $data);
                 $data = [];
                 foreach ($jsonStrings as $json) {
-                    if ('' != $json) {
+                    if ('' !== $json) {
                         $data[] = \json_decode($json, true);
                     }
                 }

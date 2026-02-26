@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FantaPaginatorAdapterTest extends TestCase
 {
-    public function testGetNbResults()
+    public function testGetNbResults(): void
     {
         $mock = $this->mockPaginatorAdapter();
         $mock
@@ -30,10 +30,10 @@ class FantaPaginatorAdapterTest extends TestCase
             ->willReturn(123)
         ;
         $adapter = new FantaPaginatorAdapter($mock);
-        $this->assertEquals(123, $adapter->getNbResults());
+        $this->assertSame(123, $adapter->getNbResults());
     }
 
-    public function testGetAggregations()
+    public function testGetAggregations(): void
     {
         $mock = $this->mockPaginatorAdapter();
         $mock
@@ -42,10 +42,10 @@ class FantaPaginatorAdapterTest extends TestCase
             ->willReturn([])
         ;
         $adapter = new FantaPaginatorAdapter($mock);
-        $this->assertEquals([], $adapter->getAggregations());
+        $this->assertSame([], $adapter->getAggregations());
     }
 
-    public function testGetSuggests()
+    public function testGetSuggests(): void
     {
         $mock = $this->mockPaginatorAdapter();
         $mock
@@ -54,10 +54,10 @@ class FantaPaginatorAdapterTest extends TestCase
             ->willReturn([])
         ;
         $adapter = new FantaPaginatorAdapter($mock);
-        $this->assertEquals([], $adapter->getSuggests());
+        $this->assertSame([], $adapter->getSuggests());
     }
 
-    public function testGetGetSlice()
+    public function testGetGetSlice(): void
     {
         $results = [];
         $resultsMock = $this->mockPartialResults($results);
@@ -70,10 +70,10 @@ class FantaPaginatorAdapterTest extends TestCase
             ->willReturn($resultsMock)
         ;
         $adapter = new FantaPaginatorAdapter($mock);
-        $this->assertEquals($results, $adapter->getSlice(1, 10));
+        $this->assertSame($results, $adapter->getSlice(1, 10));
     }
 
-    public function testGetMaxScore()
+    public function testGetMaxScore(): void
     {
         $mock = $this->mockPaginatorAdapter();
         $mock
@@ -82,7 +82,7 @@ class FantaPaginatorAdapterTest extends TestCase
             ->willReturn(123.0)
         ;
         $adapter = new FantaPaginatorAdapter($mock);
-        $this->assertEquals(123.0, $adapter->getMaxScore());
+        $this->assertSame(123.0, $adapter->getMaxScore());
     }
 
     private function mockPartialResults($results)

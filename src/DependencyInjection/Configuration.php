@@ -96,9 +96,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->validate()
-                    ->ifTrue(static function ($v) {
-                        return 1 !== \count($v);
-                    })
+                    ->ifTrue(static fn ($v) => 1 !== \count($v))
                     ->thenInvalid('Dynamic template should consist of a single named object: %s.')
                 ->end()
             ->end()
@@ -182,18 +180,13 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    /**
-     * @return ArrayNodeDefinition
-     */
-    private function getPersistenceNode()
+    private function getPersistenceNode(): ArrayNodeDefinition
     {
         $node = $this->createTreeBuilderNode('persistence');
 
         $node
             ->validate()
-                ->ifTrue(function ($v) {
-                    return isset($v['driver']) && 'orm' !== $v['driver'] && !empty($v['elastica_to_model_transformer']['hints']);
-                })
+                ->ifTrue(static fn ($v) => isset($v['driver']) && 'orm' !== $v['driver'] && !empty($v['elastica_to_model_transformer']['hints']))
                     ->thenInvalid('Hints are only supported by the "orm" driver')
             ->end()
             ->children()
@@ -329,12 +322,8 @@ class Configuration implements ConfigurationInterface
                                 ->requiresAtLeastOneElement()
                                 ->prototype('scalar')
                                     ->validate()
-                                    ->ifTrue(function ($url) {
-                                        return $url && !\str_ends_with($url, '/');
-                                    })
-                                    ->then(function ($url) {
-                                        return $url.'/';
-                                    })
+                                    ->ifTrue(static fn ($url) => $url && !\str_ends_with($url, '/'))
+                                    ->then(static fn ($url) => $url.'/')
                                     ->end()
                                 ->end()
                             ->end()
@@ -346,8 +335,8 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('api_key')->end()
                             ->arrayNode('http_error_codes')
                                 ->beforeNormalization()
-                                    ->ifTrue(function ($v) { return !\is_array($v); })
-                                    ->then(function ($v) { return [$v]; })
+                                    ->ifTrue(static fn ($v) => !\is_array($v))
+                                    ->then(static fn ($v) => [$v])
                                 ->end()
                                 ->requiresAtLeastOneElement()
                                 ->defaultValue([400, 403])
@@ -440,20 +429,15 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    /**
-     * @return ArrayNodeDefinition
-     */
-    private function createTreeBuilderNode(string $name)
+    private function createTreeBuilderNode(string $name): ArrayNodeDefinition
     {
         return (new TreeBuilder($name))->getRootNode();
     }
 
     /**
      * Adds the configuration for the "index_templates" key.
-     *
-     * @return void
      */
-    private function addIndexTemplatesSection(ArrayNodeDefinition $rootNode)
+    private function addIndexTemplatesSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
             ->fixXmlConfig('index_template')
@@ -469,10 +453,8 @@ class Configuration implements ConfigurationInterface
                         // Support multiple dynamic_template formats to match the old bundle style
                         // and the way ElasticSearch expects them
                         ->beforeNormalization()
-                        ->ifTrue(function ($v) {
-                            return isset($v['dynamic_templates']);
-                        })
-                        ->then(function ($v) {
+                        ->ifTrue(static fn ($v) => isset($v['dynamic_templates']))
+                        ->then(static function ($v) {
                             $dt = [];
                             foreach ($v['dynamic_templates'] as $key => $type) {
                                 if (\is_int($key)) {

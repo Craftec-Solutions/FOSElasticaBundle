@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  */
 class IndexableTest extends TestCase
 {
-    public function testIndexableUnknown()
+    public function testIndexableUnknown(): void
     {
         $indexable = new Indexable([]);
         $index = $indexable->isObjectIndexable('index', new Entity());
@@ -27,10 +27,8 @@ class IndexableTest extends TestCase
         $this->assertTrue($index);
     }
 
-    /**
-     * @dataProvider provideIsIndexableCallbacks
-     */
-    public function testValidIndexableCallbacks($callback, $return)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideIsIndexableCallbacks')]
+    public function testValidIndexableCallbacks($callback, $return): void
     {
         $indexable = new Indexable([
             'index' => $callback,
@@ -40,15 +38,13 @@ class IndexableTest extends TestCase
         $this->assertSame($return, $index);
     }
 
-    public function provideIsIndexableCallbacks()
+    public static function provideIsIndexableCallbacks()
     {
         return [
             ['isIndexable', false],
             [[new IndexableDecider(), 'isIndexable'], true],
             [new IndexableDecider(), true],
-            [function (Entity $entity) {
-                return $entity->maybeIndex();
-            }, true],
+            [static fn (Entity $entity) => $entity->maybeIndex(), true],
             ['entity.maybeIndex()', true],
             ['!object.isIndexable() && entity.property == "abc"', true],
             ['entity.property != "abc"', false],
@@ -57,10 +53,8 @@ class IndexableTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidIsIndexableCallbacks
-     */
-    public function testInvalidIsIndexableCallbacks($callback)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidIsIndexableCallbacks')]
+    public function testInvalidIsIndexableCallbacks($callback): void
     {
         $indexable = new Indexable([
             'index' => $callback,
@@ -70,7 +64,7 @@ class IndexableTest extends TestCase
         $indexable->isObjectIndexable('index', new Entity());
     }
 
-    public function provideInvalidIsIndexableCallbacks()
+    public static function provideInvalidIsIndexableCallbacks()
     {
         return [
             ['nonexistentEntityMethod'],
@@ -108,7 +102,7 @@ class IndexableDecider
         return !$entity->isIndexable();
     }
 
-    protected function internalMethod()
+    protected function internalMethod(): void
     {
     }
 }

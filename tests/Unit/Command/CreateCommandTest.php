@@ -81,7 +81,7 @@ class CreateCommandTest extends TestCase
         );
     }
 
-    public function testExecuteWithIndexProvidedAndWithAlias()
+    public function testExecuteWithIndexProvidedAndWithAlias(): void
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
@@ -108,7 +108,7 @@ class CreateCommandTest extends TestCase
         $this->command->run($input, $output);
     }
 
-    public function testExecuteWithIndexProvidedAndWithAliasButDisabled()
+    public function testExecuteWithIndexProvidedAndWithAliasButDisabled(): void
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
@@ -134,7 +134,7 @@ class CreateCommandTest extends TestCase
         $this->command->run($input, $output);
     }
 
-    public function testExecuteWithIndexProvidedAndWithoutAlias()
+    public function testExecuteWithIndexProvidedAndWithoutAlias(): void
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
@@ -155,7 +155,7 @@ class CreateCommandTest extends TestCase
         $this->command->run($input, $output);
     }
 
-    public function testExecuteAllIndices()
+    public function testExecuteAllIndices(): void
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);

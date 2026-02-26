@@ -104,13 +104,13 @@ class ModelToElasticaAutoTransformer implements ModelToElasticaTransformerInterf
     }
 
     /**
-     * Attempts to convert any type to a string or an array of strings.
+     * TODO Breaking change.
      *
-     * @return string|list<string>
+     * @return mixed|list<mixed>
      */
-    protected function normalizeValue($value)
+    protected function normalizeValue(mixed $value): mixed
     {
-        $normalizeValue = static function (&$v) {
+        $normalizeValue = static function (&$v): void {
             if ($v instanceof \DateTimeInterface) {
                 $v = $v->format('c');
             } elseif ($v instanceof \DateInterval) {

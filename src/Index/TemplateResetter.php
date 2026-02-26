@@ -46,7 +46,7 @@ class TemplateResetter implements ResetterInterface
     {
         $indexTemplateConfig = $this->configManager->getIndexConfiguration($indexName);
         if (!$indexTemplateConfig instanceof IndexTemplateConfig) {
-            throw new \RuntimeException(\sprintf('Incorrect index configuration object. Expecting IndexTemplateConfig, but got: %s ', \get_class($indexTemplateConfig)));
+            throw new \RuntimeException(\sprintf('Incorrect index configuration object. Expecting IndexTemplateConfig, but got: %s ', $indexTemplateConfig::class));
         }
         $indexTemplate = $this->indexTemplateManager->getIndexTemplate($indexName);
 

@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PaginateElasticaQuerySubscriberTest extends TestCase
 {
-    public function testShouldDoNothingIfSortParamIsEmpty()
+    public function testShouldDoNothingIfSortParamIsEmpty(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request()));
 
@@ -44,10 +44,8 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $subscriber->items($event);
     }
 
-    /**
-     * @dataProvider sortCases
-     */
-    public function testShouldSort(array $expected, Request $request)
+    #[\PHPUnit\Framework\Attributes\DataProvider('sortCases')]
+    public function testShouldSort(array $expected, Request $request): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack($request));
 
@@ -74,7 +72,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $this->assertSame($expected, $query->getParam('sort'));
     }
 
-    public function sortCases()
+    public static function sortCases()
     {
         $tests = [];
 
@@ -102,7 +100,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         return $tests;
     }
 
-    public function testShouldThrowIfFieldIsNotWhitelisted()
+    public function testShouldThrowIfFieldIsNotWhitelisted(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request(['ord' => 'owner'])));
 
@@ -129,7 +127,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $subscriber->items($event);
     }
 
-    public function testShouldAddNestedPath()
+    public function testShouldAddNestedPath(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request(['ord' => 'owner.name'])));
 
@@ -161,7 +159,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         ], $query->getParam('sort'));
     }
 
-    public function testShouldInvokeCallableNestedPath()
+    public function testShouldInvokeCallableNestedPath(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request(['ord' => 'owner.name'])));
 
@@ -197,7 +195,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         ], $query->getParam('sort'));
     }
 
-    public function testShouldAddNestedFilter()
+    public function testShouldAddNestedFilter(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request(['ord' => 'owner.name'])));
 
@@ -240,7 +238,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         ], $query->toArray());
     }
 
-    public function testShouldInvokeNestedFilterCallable()
+    public function testShouldInvokeNestedFilterCallable(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request(['ord' => 'owner.name'])));
 
@@ -287,7 +285,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         ], $query->toArray());
     }
 
-    public function testShouldDoNothingIfNoRequest()
+    public function testShouldDoNothingIfNoRequest(): void
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack());
 

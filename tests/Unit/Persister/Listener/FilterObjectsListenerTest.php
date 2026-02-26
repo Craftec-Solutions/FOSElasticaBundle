@@ -24,24 +24,24 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FilterObjectsListenerTest extends TestCase
 {
-    public function testShouldImplementEventSubscriberInterface()
+    public function testShouldImplementEventSubscriberInterface(): void
     {
         $rc = new \ReflectionClass(FilterObjectsListener::class);
 
         $this->assertTrue($rc->implementsInterface(EventSubscriberInterface::class));
     }
 
-    public function testShouldSubscribeOnPreInsertObjectsEvent()
+    public function testShouldSubscribeOnPreInsertObjectsEvent(): void
     {
         $this->assertSame([PreInsertObjectsEvent::class => 'filterObjects'], FilterObjectsListener::getSubscribedEvents());
     }
 
-    public function testCouldBeConstructedWithIndexableAsFirstArgument()
+    public function testCouldBeConstructedWithIndexableAsFirstArgument(): void
     {
         new FilterObjectsListener($this->createIndexableMock());
     }
 
-    public function testShouldFilterOutEverything()
+    public function testShouldFilterOutEverything(): void
     {
         $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
 
@@ -71,7 +71,7 @@ class FilterObjectsListenerTest extends TestCase
         $this->assertEmpty($event->getObjects());
     }
 
-    public function testShouldFilterSecondObject()
+    public function testShouldFilterSecondObject(): void
     {
         $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
 
@@ -101,7 +101,7 @@ class FilterObjectsListenerTest extends TestCase
         $this->assertSame([$objects[0], $objects[2]], $event->getObjects());
     }
 
-    public function testShouldSkipIndexableCheckIfOptionTrue()
+    public function testShouldSkipIndexableCheckIfOptionTrue(): void
     {
         $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
 

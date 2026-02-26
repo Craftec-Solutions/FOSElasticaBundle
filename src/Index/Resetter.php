@@ -62,7 +62,7 @@ class Resetter implements ResetterInterface
     {
         $indexConfig = $this->configManager->getIndexConfiguration($indexName);
         if (!$indexConfig instanceof IndexConfig) {
-            throw new \RuntimeException(\sprintf('Incorrect index configuration object. Expecting IndexConfig, but got: %s ', \get_class($indexConfig)));
+            throw new \RuntimeException(\sprintf('Incorrect index configuration object. Expecting IndexConfig, but got: %s ', $indexConfig::class));
         }
         $index = $this->indexManager->getIndex($indexName);
 
@@ -91,7 +91,7 @@ class Resetter implements ResetterInterface
     {
         $indexConfig = $this->configManager->getIndexConfiguration($indexName);
         if (!$indexConfig instanceof IndexConfig) {
-            throw new \RuntimeException(\sprintf('Incorrect index configuration object. Expecting IndexConfig, but got: %s ', \get_class($indexConfig)));
+            throw new \RuntimeException(\sprintf('Incorrect index configuration object. Expecting IndexConfig, but got: %s ', $indexConfig::class));
         }
 
         if ($indexConfig->isUseAlias()) {

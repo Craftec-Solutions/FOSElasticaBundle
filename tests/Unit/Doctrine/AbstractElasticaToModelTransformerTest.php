@@ -44,10 +44,10 @@ class AbstractElasticaToModelTransformerTest extends TestCase
     /**
      * Tests if ignore_missing option is properly handled in transformHybrid() method.
      */
-    public function testIgnoreMissingOptionDuringTransformHybrid()
+    public function testIgnoreMissingOptionDuringTransformHybrid(): void
     {
         $transformer = $this->getMockBuilder(ElasticaToModelTransformer::class)
-            ->setMethods(['findByIdentifiers'])
+            ->onlyMethods(['findByIdentifiers'])
             ->setConstructorArgs([$this->registry, $this->objectClass, ['ignore_missing' => true]])
             ->getMock()
         ;
@@ -77,16 +77,14 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $this->assertSame($thirdElasticaResult, $hybridResults[1]->getResult());
     }
 
-    public function testObjectClassCanBeSet()
+    public function testObjectClassCanBeSet(): void
     {
         $transformer = $this->createMockTransformer();
         $this->assertSame(Foo::class, $transformer->getObjectClass());
     }
 
-    /**
-     * @dataProvider resultsWithMatchingObjects
-     */
-    public function testObjectsAreTransformedByFindingThemByTheirIdentifiers($elasticaResults, $doctrineObjects)
+    #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
+    public function testObjectsAreTransformedByFindingThemByTheirIdentifiers($elasticaResults, $doctrineObjects): void
     {
         $transformer = $this->createMockTransformer();
 
@@ -94,7 +92,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
             ->expects($this->once())
             ->method('findByIdentifiers')
             ->with($this->equalTo([1, 2, 3]), $this->isType('boolean'))
-            ->will($this->returnValue($doctrineObjects))
+            ->willReturn($doctrineObjects)
         ;
 
         $transformedObjects = $transformer->transform($elasticaResults);
@@ -102,20 +100,18 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $this->assertSame($doctrineObjects, $transformedObjects);
     }
 
-    /**
-     * @dataProvider resultsWithMatchingObjects
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
     public function testAnExceptionIsThrownWhenTheNumberOfFoundObjectsIsLessThanTheNumberOfResults(
         $elasticaResults,
         $doctrineObjects,
-    ) {
+    ): void {
         $transformer = $this->createMockTransformer();
 
         $transformer
             ->expects($this->once())
             ->method('findByIdentifiers')
             ->with($this->equalTo([1, 2, 3]), $this->isType('boolean'))
-            ->will($this->returnValue([]))
+            ->willReturn([])
         ;
 
         $this->expectExceptionMessage(\RuntimeException::class);
@@ -124,20 +120,18 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $transformer->transform($elasticaResults);
     }
 
-    /**
-     * @dataProvider resultsWithMatchingObjects
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
     public function testAnExceptionIsNotThrownWhenTheNumberOfFoundObjectsIsLessThanTheNumberOfResultsIfOptionSet(
         $elasticaResults,
         $doctrineObjects,
-    ) {
+    ): void {
         $transformer = $this->createMockTransformer(['ignore_missing' => true]);
 
         $transformer
             ->expects($this->once())
             ->method('findByIdentifiers')
             ->with($this->equalTo([1, 2, 3]), $this->isType('boolean'))
-            ->will($this->returnValue([]))
+            ->willReturn([])
         ;
 
         $results = $transformer->transform($elasticaResults);
@@ -145,10 +139,8 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $this->assertSame([], $results);
     }
 
-    /**
-     * @dataProvider resultsWithMatchingObjects
-     */
-    public function testHighlightsAreSetOnTransformedObjects($elasticaResults, $doctrineObjects)
+    #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
+    public function testHighlightsAreSetOnTransformedObjects($elasticaResults, $doctrineObjects): void
     {
         $transformer = $this->createMockTransformer();
 
@@ -156,7 +148,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
             ->expects($this->once())
             ->method('findByIdentifiers')
             ->with($this->equalTo([1, 2, 3]), $this->isType('boolean'))
-            ->will($this->returnValue($doctrineObjects))
+            ->willReturn($doctrineObjects)
         ;
 
         $results = $transformer->transform($elasticaResults);
@@ -167,10 +159,8 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider resultsWithMatchingObjects
-     */
-    public function testResultsAreSortedByIdentifier($elasticaResults, $doctrineObjects)
+    #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
+    public function testResultsAreSortedByIdentifier($elasticaResults, $doctrineObjects): void
     {
         \rsort($doctrineObjects);
 
@@ -180,7 +170,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
             ->expects($this->once())
             ->method('findByIdentifiers')
             ->with($this->equalTo([1, 2, 3]), $this->isType('boolean'))
-            ->will($this->returnValue($doctrineObjects))
+            ->willReturn($doctrineObjects)
         ;
 
         $results = $transformer->transform($elasticaResults);
@@ -190,10 +180,8 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $this->assertSame($doctrineObjects[0], $results[2]);
     }
 
-    /**
-     * @dataProvider resultsWithMatchingObjects
-     */
-    public function testHybridTransformReturnsDecoratedResults($elasticaResults, $doctrineObjects)
+    #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
+    public function testHybridTransformReturnsDecoratedResults($elasticaResults, $doctrineObjects): void
     {
         $transformer = $this->createMockTransformer();
 
@@ -201,7 +189,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
             ->expects($this->once())
             ->method('findByIdentifiers')
             ->with($this->equalTo([1, 2, 3]), $this->isType('boolean'))
-            ->will($this->returnValue($doctrineObjects))
+            ->willReturn($doctrineObjects)
         ;
 
         $results = $transformer->hybridTransform($elasticaResults);
@@ -215,7 +203,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         }
     }
 
-    public function resultsWithMatchingObjects()
+    public static function resultsWithMatchingObjects()
     {
         $elasticaResults = $doctrineObjects = [];
         for ($i = 1; $i < 4; ++$i) {
@@ -228,7 +216,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         ];
     }
 
-    public function testIdentifierFieldDefaultsToId()
+    public function testIdentifierFieldDefaultsToId(): void
     {
         $transformer = $this->createMockTransformer();
         $this->assertSame('id', $transformer->getIdentifierField());
@@ -236,16 +224,14 @@ class AbstractElasticaToModelTransformerTest extends TestCase
 
     private function createMockPropertyAccessor()
     {
-        $callback = function ($object, $identifier) {
-            return $object->{$identifier};
-        };
+        $callback = static fn ($object, $identifier) => $object->{$identifier};
 
         $propertyAccessor = $this->createMock(PropertyAccessorInterface::class);
         $propertyAccessor
             ->expects($this->any())
             ->method('getValue')
             ->with($this->isType('object'), $this->isType('string'))
-            ->will($this->returnCallback($callback))
+            ->willReturnCallback($callback)
         ;
 
         return $propertyAccessor;

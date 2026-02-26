@@ -27,12 +27,9 @@ class IndexTemplateManagerTest extends TestCase
      *
      * @param string      $name
      * @param string|null $expectedException
-     *
-     * @return void
-     *
-     * @dataProvider provideTestGetIndexTemplate
      */
-    public function testGetIndexTemplate(array $templates, $name, $expectedTemplate, $expectedException = null)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideTestGetIndexTemplate')]
+    public function testGetIndexTemplate(array $templates, $name, $expectedTemplate, $expectedException = null): void
     {
         if (null !== $expectedException) {
             $this->expectException($expectedException);
@@ -41,7 +38,7 @@ class IndexTemplateManagerTest extends TestCase
         $this->assertSame($expectedTemplate, $templateManager->getIndexTemplate($name));
     }
 
-    public function provideTestGetIndexTemplate()
+    public static function provideTestGetIndexTemplate()
     {
         return [
             'empty templates' => [

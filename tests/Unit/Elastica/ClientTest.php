@@ -32,7 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ClientTest extends TestCase
 {
-    public function testRequestsAreLogged()
+    public function testRequestsAreLogged(): void
     {
         $logger = $this->createMock(ElasticaLogger::class);
         $logger
@@ -72,7 +72,7 @@ class ClientTest extends TestCase
         $dispatcher->expects($invoke = $this->exactly(2))
             ->method('dispatch')
             ->with($this->callback(function ($o) use ($invoke): bool {
-                $counter = $invoke->getInvocationCount() - 1;
+                $counter = $invoke->numberOfInvocations() - 1;
 
                 if ($counter > 1) {
                     return false;
@@ -83,11 +83,11 @@ class ClientTest extends TestCase
                         return false;
                     }
 
-                    $this->assertEquals('event', $o->getPath());
-                    $this->assertEquals(Request::GET, $o->getMethod());
-                    $this->assertEquals(['some' => 'data'], $o->getData());
-                    $this->assertEquals(['query' => 'data'], $o->getQuery());
-                    $this->assertEquals(Request::DEFAULT_CONTENT_TYPE, $o->getContentType());
+                    $this->assertSame('event', $o->getPath());
+                    $this->assertSame(Request::GET, $o->getMethod());
+                    $this->assertSame(['some' => 'data'], $o->getData());
+                    $this->assertSame(['query' => 'data'], $o->getQuery());
+                    $this->assertSame(Request::DEFAULT_CONTENT_TYPE, $o->getContentType());
                 } elseif (1 === $counter) {
                     if (!$o instanceof PostElasticaRequestEvent) {
                         return false;
@@ -105,11 +105,11 @@ class ClientTest extends TestCase
                     $query = [];
                     \parse_str($request->getUri()->getQuery(), $query);
 
-                    $this->assertEquals('event', $path);
-                    $this->assertEquals(Request::GET, $method);
-                    $this->assertEquals(['some' => 'data'], $data);
-                    $this->assertEquals(['query' => 'data'], $query);
-                    $this->assertEquals(Request::DEFAULT_CONTENT_TYPE, $request->getHeaderLine('Content-Type'));
+                    $this->assertSame('event', $path);
+                    $this->assertSame(Request::GET, $method);
+                    $this->assertSame(['some' => 'data'], $data);
+                    $this->assertSame(['query' => 'data'], $query);
+                    $this->assertSame(Request::DEFAULT_CONTENT_TYPE, $request->getHeaderLine('Content-Type'));
 
                     $this->assertInstanceOf(Response::class, $o->getResponse());
                 }
@@ -151,7 +151,7 @@ class ClientTest extends TestCase
         $dispatcher->expects($invoke = $this->exactly(2))
             ->method('dispatch')
             ->with($this->callback(function ($o) use ($invoke): bool {
-                $counter = $invoke->getInvocationCount() - 1;
+                $counter = $invoke->numberOfInvocations() - 1;
 
                 if ($counter > 1) {
                     return false;
@@ -162,11 +162,11 @@ class ClientTest extends TestCase
                         return false;
                     }
 
-                    $this->assertEquals('event', $o->getPath());
-                    $this->assertEquals(Request::GET, $o->getMethod());
-                    $this->assertEquals(['some' => 'data'], $o->getData());
-                    $this->assertEquals(['query' => 'data'], $o->getQuery());
-                    $this->assertEquals(Request::DEFAULT_CONTENT_TYPE, $o->getContentType());
+                    $this->assertSame('event', $o->getPath());
+                    $this->assertSame(Request::GET, $o->getMethod());
+                    $this->assertSame(['some' => 'data'], $o->getData());
+                    $this->assertSame(['query' => 'data'], $o->getQuery());
+                    $this->assertSame(Request::DEFAULT_CONTENT_TYPE, $o->getContentType());
                 } elseif (1 === $counter) {
                     if (!$o instanceof ElasticaRequestExceptionEvent) {
                         return false;
@@ -184,11 +184,11 @@ class ClientTest extends TestCase
                     $query = [];
                     \parse_str($request->getUri()->getQuery(), $query);
 
-                    $this->assertEquals('event', $path);
-                    $this->assertEquals(Request::GET, $method);
-                    $this->assertEquals(['some' => 'data'], $data);
-                    $this->assertEquals(['query' => 'data'], $query);
-                    $this->assertEquals(Request::DEFAULT_CONTENT_TYPE, $request->getHeaderLine('Content-Type'));
+                    $this->assertSame('event', $path);
+                    $this->assertSame(Request::GET, $method);
+                    $this->assertSame(['some' => 'data'], $data);
+                    $this->assertSame(['query' => 'data'], $query);
+                    $this->assertSame(Request::DEFAULT_CONTENT_TYPE, $request->getHeaderLine('Content-Type'));
 
                     $this->assertInstanceOf(ElasticsearchException::class, $o->getException());
                 }
@@ -207,7 +207,7 @@ class ClientTest extends TestCase
         ));
     }
 
-    public function testRequestsWithTransportInfoErrorsRaiseExceptions()
+    public function testRequestsWithTransportInfoErrorsRaiseExceptions(): void
     {
         $httpCode = 403;
         $responseString = JSON::stringify(['message' => 'some AWS error']);
@@ -228,7 +228,7 @@ class ClientTest extends TestCase
         ));
     }
 
-    public function testGetIndexTemplate()
+    public function testGetIndexTemplate(): void
     {
         $client = new Client();
         $template = $client->getIndexTemplate('some_index');

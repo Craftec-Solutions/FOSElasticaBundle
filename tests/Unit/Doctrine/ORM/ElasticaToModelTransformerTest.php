@@ -51,12 +51,12 @@ class ElasticaToModelTransformerTest extends TestCase
         $this->registry->expects($this->any())
             ->method('getManagerForClass')
             ->with(self::OBJECT_CLASS)
-            ->will($this->returnValue($this->manager))
+            ->willReturn($this->manager)
         ;
 
         $this->repository = $this
             ->getMockBuilder(ObjectRepository::class)
-            ->setMethods([
+            ->onlyMethods([
                 'customQueryBuilderCreator',
                 'createQueryBuilder',
                 'find',
@@ -70,7 +70,7 @@ class ElasticaToModelTransformerTest extends TestCase
         $this->manager->expects($this->any())
             ->method('getRepository')
             ->with(self::OBJECT_CLASS)
-            ->will($this->returnValue($this->repository))
+            ->willReturn($this->repository)
         ;
     }
 
@@ -78,14 +78,14 @@ class ElasticaToModelTransformerTest extends TestCase
      * Tests that the Transformer uses the query_builder_method configuration option
      * allowing configuration of createQueryBuilder call.
      */
-    public function testTransformUsesQueryBuilderMethodConfiguration()
+    public function testTransformUsesQueryBuilderMethodConfiguration(): void
     {
         $qb = $this->createMock(QueryBuilder::class);
 
         $this->repository->expects($this->once())
             ->method('customQueryBuilderCreator')
             ->with($this->equalTo(ElasticaToModelTransformer::ENTITY_ALIAS))
-            ->will($this->returnValue($qb))
+            ->willReturn($qb)
         ;
         $this->repository->expects($this->never())
             ->method('createQueryBuilder')
@@ -106,7 +106,7 @@ class ElasticaToModelTransformerTest extends TestCase
      * Tests that the Transformer uses the query_builder_method configuration option
      * allowing configuration of createQueryBuilder call.
      */
-    public function testTransformUsesDefaultQueryBuilderMethodConfiguration()
+    public function testTransformUsesDefaultQueryBuilderMethodConfiguration(): void
     {
         $qb = $this->createMock(QueryBuilder::class);
 
@@ -116,7 +116,7 @@ class ElasticaToModelTransformerTest extends TestCase
         $this->repository->expects($this->once())
             ->method('createQueryBuilder')
             ->with($this->equalTo(ElasticaToModelTransformer::ENTITY_ALIAS))
-            ->will($this->returnValue($qb))
+            ->willReturn($qb)
         ;
 
         $transformer = new ElasticaToModelTransformer($this->registry, self::OBJECT_CLASS);
@@ -131,10 +131,10 @@ class ElasticaToModelTransformerTest extends TestCase
     /**
      * Checks that the 'hints' parameter is used on the created query.
      */
-    public function testUsesHintsConfigurationIfGiven()
+    public function testUsesHintsConfigurationIfGiven(): void
     {
         $query = $this->getMockBuilder(Query::class)
-            ->setMethods(['setHint', 'execute', 'setHydrationMode'])
+            ->onlyMethods(['setHint', 'execute', 'setHydrationMode'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass()
         ;
@@ -154,7 +154,7 @@ class ElasticaToModelTransformerTest extends TestCase
         $this->repository->expects($this->once())
             ->method('createQueryBuilder')
             ->with($this->equalTo(ElasticaToModelTransformer::ENTITY_ALIAS))
-            ->will($this->returnValue($qb))
+            ->willReturn($qb)
         ;
 
         $transformer = new ElasticaToModelTransformer($this->registry, self::OBJECT_CLASS, [

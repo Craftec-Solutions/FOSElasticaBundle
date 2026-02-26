@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PopulateListenerTest extends TestCase
 {
-    public function testOnPostIndexPopulateWithReset()
+    public function testOnPostIndexPopulateWithReset(): void
     {
         $indexName = 'index';
         $deleteOption = true;
@@ -33,7 +33,7 @@ class PopulateListenerTest extends TestCase
         $listener->onPostIndexPopulate($event);
     }
 
-    public function testOnPostIndexPopulateWithoutReset()
+    public function testOnPostIndexPopulateWithoutReset(): void
     {
         $indexName = 'index';
         $deleteOption = true;

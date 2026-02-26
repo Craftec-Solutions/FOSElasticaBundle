@@ -53,7 +53,7 @@ class RepositoryManager implements RepositoryManagerInterface
     public function getRepository(string $entityName): Repository
     {
         $realEntityName = $entityName;
-        if (false !== \strpos($entityName, ':')) {
+        if (\str_contains($entityName, ':')) {
             [$namespaceAlias, $simpleClassName] = \explode(':', $entityName);
             // @link https://github.com/doctrine/persistence/pull/204
             if (\method_exists($this->managerRegistry, 'getAliasNamespace')) {

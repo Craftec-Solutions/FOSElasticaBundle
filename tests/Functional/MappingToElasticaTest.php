@@ -16,13 +16,12 @@ use FOS\ElasticaBundle\Index\ResetterInterface;
 use FOS\ElasticaBundle\Persister\ObjectPersisterInterface;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class MappingToElasticaTest extends WebTestCase
 {
-    public function testResetIndexAddsMappings()
+    public function testResetIndexAddsMappings(): void
     {
         self::bootKernel(['test_case' => 'Basic']);
         $resetter = $this->getResetter();
@@ -44,7 +43,7 @@ class MappingToElasticaTest extends WebTestCase
         $this->assertSame('true', $mapping['properties']['dynamic_allowed']['dynamic']);
     }
 
-    public function testORMResetIndexAddsMappings()
+    public function testORMResetIndexAddsMappings(): void
     {
         self::bootKernel(['test_case' => 'ORM']);
         $resetter = $this->getResetter();
@@ -56,7 +55,7 @@ class MappingToElasticaTest extends WebTestCase
         $this->assertNotEmpty($mapping, 'Mapping was populated');
     }
 
-    public function testMappingIteratorToArrayField()
+    public function testMappingIteratorToArrayField(): void
     {
         self::bootKernel(['test_case' => 'ORM']);
         /** @var ObjectPersisterInterface $persister */

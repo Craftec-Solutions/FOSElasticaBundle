@@ -149,7 +149,7 @@ class PopulateCommand extends Command
 
         $this->dispatcher->addListener(
             OnExceptionEvent::class,
-            $exceptionListener = function (OnExceptionEvent $event) use ($consoleLogger) {
+            $exceptionListener = static function (OnExceptionEvent $event) use ($consoleLogger): void {
                 $consoleLogger->call(
                     \count($event->getObjects()),
                     0,
@@ -161,7 +161,7 @@ class PopulateCommand extends Command
 
         $this->dispatcher->addListener(
             PostInsertObjectsEvent::class,
-            $postInsertListener = function (PostInsertObjectsEvent $event) use ($consoleLogger) {
+            $postInsertListener = static function (PostInsertObjectsEvent $event) use ($consoleLogger): void {
                 $consoleLogger->call(\count($event->getObjects()), $event->getFilteredObjectCount(), $event->getPager()->getNbResults());
             }
         );
@@ -169,7 +169,7 @@ class PopulateCommand extends Command
         if ($options['ignore_errors']) {
             $this->dispatcher->addListener(
                 OnExceptionEvent::class,
-                $ignoreExceptionsListener = function (OnExceptionEvent $event) {
+                $ignoreExceptionsListener = static function (OnExceptionEvent $event): void {
                     if ($event->getException() instanceof BulkResponseException) {
                         $event->setIgnored(true);
                     }

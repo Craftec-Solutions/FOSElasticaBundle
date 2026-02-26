@@ -24,7 +24,7 @@ use FOS\ElasticaBundle\Index\TemplateResetter;
  */
 class IndexTemplatesTest extends WebTestCase
 {
-    public function testContainer()
+    public function testContainer(): void
     {
         self::bootKernel(['test_case' => 'Basic']);
 

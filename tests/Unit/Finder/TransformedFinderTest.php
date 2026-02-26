@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class TransformedFinderTest extends TestCase
 {
-    public function testFindMethodTransformsSearchResults()
+    public function testFindMethodTransformsSearchResults(): void
     {
         $transformer = $this->createMockTransformer('transform');
         $query = Query::create('');
@@ -37,7 +37,7 @@ class TransformedFinderTest extends TestCase
         $finder->find($query, $limit);
     }
 
-    public function testFindHybridMethodTransformsSearchResults()
+    public function testFindHybridMethodTransformsSearchResults(): void
     {
         $transformer = $this->createMockTransformer('hybridTransform');
         $query = Query::create('');
@@ -48,7 +48,7 @@ class TransformedFinderTest extends TestCase
         $finder->findHybrid($query, $limit);
     }
 
-    public function testFindRawMethodTransformsSearchResults()
+    public function testFindRawMethodTransformsSearchResults(): void
     {
         $transformer = $this->createMock(ElasticaToModelTransformerInterface::class);
         $transformer->expects($this->never())
@@ -62,7 +62,7 @@ class TransformedFinderTest extends TestCase
         $finder->findRaw($query, $limit);
     }
 
-    public function testSearchMethodCreatesAQueryAndReturnsResultsFromSearchableDependency()
+    public function testSearchMethodCreatesAQueryAndReturnsResultsFromSearchableDependency(): void
     {
         $searchable = $this->createMock(SearchableInterface::class);
         $transformer = $this->createMock(ElasticaToModelTransformerInterface::class);
@@ -70,7 +70,7 @@ class TransformedFinderTest extends TestCase
         $searchable->expects($this->once())
             ->method('search')
             ->with($this->isInstanceOf(Query::class))
-            ->will($this->returnValue($this->createMockResultSet()))
+            ->willReturn($this->createMockResultSet())
         ;
 
         $finder = new TransformedFinder($searchable, $transformer);
@@ -83,7 +83,7 @@ class TransformedFinderTest extends TestCase
         $this->assertIsArray($results);
     }
 
-    public function testFindHybridPaginatedReturnsAConfiguredPagerfantaObject()
+    public function testFindHybridPaginatedReturnsAConfiguredPagerfantaObject(): void
     {
         $searchable = $this->createMock(SearchableInterface::class);
         $transformer = $this->createMock(ElasticaToModelTransformerInterface::class);
@@ -95,7 +95,7 @@ class TransformedFinderTest extends TestCase
         $this->assertInstanceOf(Pagerfanta::class, $pagerfanta);
     }
 
-    public function testFindPaginatedReturnsAConfiguredPagerfantaObject()
+    public function testFindPaginatedReturnsAConfiguredPagerfantaObject(): void
     {
         $searchable = $this->createMock(SearchableInterface::class);
         $transformer = $this->createMock(ElasticaToModelTransformerInterface::class);
@@ -107,7 +107,7 @@ class TransformedFinderTest extends TestCase
         $this->assertInstanceOf(Pagerfanta::class, $pagerfanta);
     }
 
-    public function testCreatePaginatorAdapter()
+    public function testCreatePaginatorAdapter(): void
     {
         $searchable = $this->createMock(SearchableInterface::class);
         $transformer = $this->createMock(ElasticaToModelTransformerInterface::class);
@@ -117,7 +117,7 @@ class TransformedFinderTest extends TestCase
         $this->assertInstanceOf(TransformedPaginatorAdapter::class, $finder->createPaginatorAdapter(''));
     }
 
-    public function testCreateHybridPaginatorAdapter()
+    public function testCreateHybridPaginatorAdapter(): void
     {
         $searchable = $this->createMock(SearchableInterface::class);
         $transformer = $this->createMock(ElasticaToModelTransformerInterface::class);
@@ -146,7 +146,7 @@ class TransformedFinderTest extends TestCase
 
         $finder = $this->getMockBuilder(TransformedFinder::class)
             ->setConstructorArgs([$searchable, $transformer])
-            ->setMethods(['search'])
+            ->onlyMethods(['search'])
             ->getMock()
         ;
 
@@ -154,7 +154,7 @@ class TransformedFinderTest extends TestCase
             ->expects($this->once())
             ->method('search')
             ->with($query, $limit)
-            ->will($this->returnValue([]))
+            ->willReturn([])
         ;
 
         return $finder;
@@ -164,7 +164,7 @@ class TransformedFinderTest extends TestCase
     {
         $resultSet = $this->createPartialMock(ResultSet::class, ['getResults']);
 
-        $resultSet->expects($this->once())->method('getResults')->will($this->returnValue([]));
+        $resultSet->expects($this->once())->method('getResults')->willReturn([]);
 
         return $resultSet;
     }

@@ -14,10 +14,9 @@ namespace FOS\ElasticaBundle\Tests\Functional;
 use FOS\ElasticaBundle\Provider\Indexable;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class IndexableCallbackTest extends WebTestCase
 {
     /**
@@ -27,7 +26,7 @@ class IndexableCallbackTest extends WebTestCase
      * key is respected, and
      * 2) To test the Extension's set up of the Indexable service.
      */
-    public function testIndexableCallback()
+    public function testIndexableCallback(): void
     {
         self::bootKernel(['test_case' => 'ORM']);
 

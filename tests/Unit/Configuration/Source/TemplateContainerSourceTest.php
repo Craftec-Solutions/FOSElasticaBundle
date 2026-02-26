@@ -22,14 +22,14 @@ use PHPUnit\Framework\TestCase;
  */
 class TemplateContainerSourceTest extends TestCase
 {
-    public function testGetEmptyConfiguration()
+    public function testGetEmptyConfiguration(): void
     {
         $containerSource = new TemplateContainerSource([]);
         $indexes = $containerSource->getConfiguration();
         $this->assertSame([], $indexes);
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $containerSource = new TemplateContainerSource(
             [
@@ -52,17 +52,17 @@ class TemplateContainerSourceTest extends TestCase
         $indexes = $containerSource->getConfiguration();
         $this->assertInstanceOf(IndexTemplateConfig::class, $indexes['some_index_template']);
         $templateConfig = $indexes['some_index_template'];
-        $this->assertEquals('some_index_template', $templateConfig->getName());
-        $this->assertEquals(['some_index_config_*'], $templateConfig->getIndexPatterns());
-        $this->assertEquals(
+        $this->assertSame('some_index_template', $templateConfig->getName());
+        $this->assertSame(['some_index_config_*'], $templateConfig->getIndexPatterns());
+        $this->assertSame(
             [
                 'some_setting' => 'setting_value',
             ],
             $templateConfig->getSettings()
         );
-        $this->assertEquals('some_search_name', $templateConfig->getElasticSearchName());
-        $this->assertEquals('some_index_template', $templateConfig->getName());
-        $this->assertEquals(['some_field' => []], $templateConfig->getMapping());
-        $this->assertEquals(false, $templateConfig->getDateDetection());
+        $this->assertSame('some_search_name', $templateConfig->getElasticSearchName());
+        $this->assertSame('some_index_template', $templateConfig->getName());
+        $this->assertSame(['some_field' => []], $templateConfig->getMapping());
+        $this->assertFalse($templateConfig->getDateDetection());
     }
 }

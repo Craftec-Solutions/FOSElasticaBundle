@@ -62,12 +62,12 @@ class TemplateResetterTest extends TestCase
         );
     }
 
-    public function testResetterImplementsResetterInterface()
+    public function testResetterImplementsResetterInterface(): void
     {
         $this->assertInstanceOf(ResetterInterface::class, $this->resetter);
     }
 
-    public function testResetAllIndexes()
+    public function testResetAllIndexes(): void
     {
         // assemble
         $names = ['first_template'];
@@ -108,7 +108,7 @@ class TemplateResetterTest extends TestCase
         $this->resetter->resetAllIndexes();
     }
 
-    public function testResetAllIndexesAndDelete()
+    public function testResetAllIndexesAndDelete(): void
     {
         // assemble
         $templateName = 'index_template';
@@ -176,7 +176,7 @@ class TemplateResetterTest extends TestCase
         $this->resetter->resetAllIndexes(true);
     }
 
-    public function testResetIndex()
+    public function testResetIndex(): void
     {
         // assemble
         $name = 'first_template';
@@ -213,7 +213,7 @@ class TemplateResetterTest extends TestCase
         $this->resetter->resetIndex($name);
     }
 
-    public function testResetIndexIndexeAndDelete()
+    public function testResetIndexIndexeAndDelete(): void
     {
         // assemble
         $templateName = 'index_template';
@@ -276,7 +276,7 @@ class TemplateResetterTest extends TestCase
         $this->resetter->resetIndex($templateName, true);
     }
 
-    public function testDeleteTemplateIndexes()
+    public function testDeleteTemplateIndexes(): void
     {
         // assemble
         $templateName = 'some_template';

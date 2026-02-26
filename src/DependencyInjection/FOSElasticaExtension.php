@@ -409,7 +409,7 @@ class FOSElasticaExtension extends Extension
 
     private function transformServiceReference($classOrService)
     {
-        return 0 === \strpos($classOrService, '@') ? new Reference(\substr($classOrService, 1)) : $classOrService;
+        return \str_starts_with($classOrService, '@') ? new Reference(\substr($classOrService, 1)) : $classOrService;
     }
 
     private function loadIndexSerializerIntegration(array $config, ContainerBuilder $container, Reference $indexRef): void
@@ -725,9 +725,7 @@ class FOSElasticaExtension extends Extension
      */
     private function loadIndexManager(ContainerBuilder $container): void
     {
-        $indexRefs = \array_map(static function ($index) {
-            return $index['reference'];
-        }, $this->indexConfigs);
+        $indexRefs = \array_map(static fn ($index) => $index['reference'], $this->indexConfigs);
 
         $managerDef = $container->getDefinition('fos_elastica.index_manager');
         $managerDef->replaceArgument(0, $indexRefs);
@@ -738,9 +736,7 @@ class FOSElasticaExtension extends Extension
      */
     private function loadIndexTemplateManager(ContainerBuilder $container): void
     {
-        $indexTemplateRefs = \array_map(static function ($index) {
-            return $index['reference'];
-        }, $this->indexTemplateConfigs);
+        $indexTemplateRefs = \array_map(static fn ($index) => $index['reference'], $this->indexTemplateConfigs);
 
         $managerDef = $container->getDefinition('fos_elastica.index_template_manager');
         $managerDef->replaceArgument(0, $indexTemplateRefs);
@@ -782,7 +778,7 @@ class FOSElasticaExtension extends Extension
      */
     private function createDefaultManagerAlias(string $defaultManager, ContainerBuilder $container): void
     {
-        if (0 == \count($this->loadedDrivers)) {
+        if (0 === \count($this->loadedDrivers)) {
             return;
         }
 

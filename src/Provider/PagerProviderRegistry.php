@@ -34,9 +34,7 @@ class PagerProviderRegistry
      */
     public function getProviders(): array
     {
-        return \array_reduce(\array_keys($this->providers->getProvidedServices()), function ($carry, $index) {
-            return $carry + [$index => $this->providers->get($index)];
-        }, []);
+        return \array_reduce(\array_keys($this->providers->getProvidedServices()), fn ($carry, $index) => $carry + [$index => $this->providers->get($index)], []);
     }
 
     /**

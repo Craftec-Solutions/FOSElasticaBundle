@@ -27,7 +27,7 @@ class FilterObjectsListener implements EventSubscriberInterface
     public function filterObjects(PreInsertObjectsEvent $event): void
     {
         $options = $event->getOptions();
-        if (false == empty($options['skip_indexable_check'])) {
+        if (false === empty($options['skip_indexable_check'])) {
             return;
         }
 

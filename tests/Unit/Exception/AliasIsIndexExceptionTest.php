@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  */
 class AliasIsIndexExceptionTest extends TestCase
 {
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $exception = new AliasIsIndexException('indexName');
     }

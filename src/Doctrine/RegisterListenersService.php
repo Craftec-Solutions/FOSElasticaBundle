@@ -38,13 +38,13 @@ class RegisterListenersService
         ], $options);
 
         if ($options['clear_object_manager']) {
-            $this->addListener($pager, PostInsertObjectsEvent::class, function () use ($manager) {
+            $this->addListener($pager, PostInsertObjectsEvent::class, static function () use ($manager): void {
                 $manager->clear();
             });
         }
 
         if ($options['sleep']) {
-            $this->addListener($pager, PostInsertObjectsEvent::class, function () use ($options) {
+            $this->addListener($pager, PostInsertObjectsEvent::class, static function () use ($options): void {
                 \usleep($options['sleep']);
             });
         }
@@ -57,11 +57,11 @@ class RegisterListenersService
             if (\method_exists($configuration, 'getSQLLogger') && \method_exists($configuration, 'setSQLLogger')) {
                 $logger = $configuration->getSQLLogger();
 
-                $this->addListener($pager, PreFetchObjectsEvent::class, function () use ($configuration) {
+                $this->addListener($pager, PreFetchObjectsEvent::class, static function () use ($configuration): void {
                     $configuration->setSQLLogger(null);
                 });
 
-                $this->addListener($pager, PreInsertObjectsEvent::class, function () use ($configuration, $logger) {
+                $this->addListener($pager, PreInsertObjectsEvent::class, static function () use ($configuration, $logger): void {
                     $configuration->setSQLLogger($logger);
                 });
             }
@@ -70,7 +70,7 @@ class RegisterListenersService
 
     private function addListener(PagerInterface $pager, string $eventName, \Closure $callable): void
     {
-        $this->dispatcher->addListener($eventName, function (PersistEvent $event) use ($pager, $callable) {
+        $this->dispatcher->addListener($eventName, static function (PersistEvent $event) use ($pager, $callable): void {
             if ($event->getPager() !== $pager) {
                 return;
             }

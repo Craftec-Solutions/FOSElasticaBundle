@@ -16,13 +16,12 @@ use Elastica\Query\MatchQuery;
 use FOS\ElasticaBundle\Persister\ObjectPersisterInterface;
 
 /**
- * @group functional
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\Group('functional')]
 class PropertyPathTest extends WebTestCase
 {
-    public function testContainerSource()
+    public function testContainerSource(): void
     {
         self::bootKernel(['test_case' => 'ORM']);
         /** @var ObjectPersisterInterface $persister */
