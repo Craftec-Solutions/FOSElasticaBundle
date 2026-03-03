@@ -89,11 +89,24 @@ class CreateCommandTest extends TestCase
         $indexName = 'foo';
         $mapping = ['mapping'];
 
+        $matcher = $this->exactly(2);
         $input
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('getOption')
-            ->withConsecutive(['index'], ['no-alias'])
-            ->willReturnOnConsecutiveCalls($indexName, false)
+            ->willReturnCallback(function (string $option) use ($matcher, $indexName) {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => (function () use ($option, $indexName) {
+                        $this->assertSame('index', $option);
+
+                        return $indexName;
+                    })(),
+                    2 => (function () use ($option) {
+                        $this->assertSame('no-alias', $option);
+
+                        return false;
+                    })(),
+                };
+            })
         ;
         $output->expects($this->once())->method('writeln');
         $this->configManager->expects($this->once())->method('getIndexConfiguration')->with($indexName)->willReturn($this->indexConfig);
@@ -116,11 +129,24 @@ class CreateCommandTest extends TestCase
         $indexName = 'foo';
         $mapping = ['mapping'];
 
+        $matcher = $this->exactly(2);
         $input
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('getOption')
-            ->withConsecutive(['index'], ['no-alias'])
-            ->willReturnOnConsecutiveCalls($indexName, true)
+            ->willReturnCallback(function (string $option) use ($matcher, $indexName) {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => (function () use ($option, $indexName) {
+                        $this->assertSame('index', $option);
+
+                        return $indexName;
+                    })(),
+                    2 => (function () use ($option) {
+                        $this->assertSame('no-alias', $option);
+
+                        return true;
+                    })(),
+                };
+            })
         ;
         $output->expects($this->once())->method('writeln');
         $this->configManager->expects($this->once())->method('getIndexConfiguration')->with($indexName)->willReturn($this->indexConfig);
@@ -169,17 +195,43 @@ class CreateCommandTest extends TestCase
         $mapping = ['mapping'];
 
         $input->expects($this->once())->method('getOption')->with('index')->willReturn($indexName);
-        $this->indexManager->expects($this->once())->method('getAllIndexes')->willReturn(\array_flip($indices));
+        $this->indexManager->expects($this->once())->method('getAllIndexes')->willReturn(array_flip($indices));
         $output->expects($this->exactly(2))->method('writeln');
 
-        $this->configManager->expects($this->exactly(2))->method('getIndexConfiguration')
-            ->withConsecutive(['foo'], ['bar'])
-            ->willReturnOnConsecutiveCalls($indexConfig1, $indexConfig2)
+        $getIndexConfigurationMatcher = $this->exactly(2);
+        $this->configManager->expects($getIndexConfigurationMatcher)->method('getIndexConfiguration')
+            ->willReturnCallback(function (string $indexName) use ($getIndexConfigurationMatcher, $indexConfig1, $indexConfig2) {
+                return match ($getIndexConfigurationMatcher->numberOfInvocations()) {
+                    1 => (function () use ($indexName, $indexConfig1) {
+                        $this->assertSame('foo', $indexName);
+
+                        return $indexConfig1;
+                    })(),
+                    2 => (function () use ($indexName, $indexConfig2) {
+                        $this->assertSame('bar', $indexName);
+
+                        return $indexConfig2;
+                    })(),
+                };
+            })
         ;
 
-        $this->indexManager->expects($this->exactly(2))->method('getIndex')
-            ->withConsecutive(['foo'], ['bar'])
-            ->willReturnOnConsecutiveCalls($index1, $index2)
+        $getIndexMatcher = $this->exactly(2);
+        $this->indexManager->expects($getIndexMatcher)->method('getIndex')
+            ->willReturnCallback(function (string $indexName) use ($getIndexMatcher, $index1, $index2) {
+                return match ($getIndexMatcher->numberOfInvocations()) {
+                    1 => (function () use ($indexName, $index1) {
+                        $this->assertSame('foo', $indexName);
+
+                        return $index1;
+                    })(),
+                    2 => (function () use ($indexName, $index2) {
+                        $this->assertSame('bar', $indexName);
+
+                        return $index2;
+                    })(),
+                };
+            })
         ;
 
         $indexConfig1->expects($this->exactly(2))->method('isUseAlias')->willReturn(false);
@@ -187,9 +239,22 @@ class CreateCommandTest extends TestCase
 
         $this->aliasProcessor->expects($this->never())->method('setRootName');
 
-        $this->mappingBuilder->expects($this->exactly(2))->method('buildIndexMapping')
-            ->withConsecutive([$indexConfig1], [$indexConfig2])
-            ->willReturn($mapping)
+        $buildIndexMappingMatcher = $this->exactly(2);
+        $this->mappingBuilder->expects($buildIndexMappingMatcher)->method('buildIndexMapping')
+            ->willReturnCallback(function (IndexConfig $indexConfig) use ($buildIndexMappingMatcher, $indexConfig1, $indexConfig2, $mapping) {
+                return match ($buildIndexMappingMatcher->numberOfInvocations()) {
+                    1 => (function () use ($indexConfig, $indexConfig1, $mapping) {
+                        $this->assertSame($indexConfig1, $indexConfig);
+
+                        return $mapping;
+                    })(),
+                    2 => (function () use ($indexConfig, $indexConfig2, $mapping) {
+                        $this->assertSame($indexConfig2, $indexConfig);
+
+                        return $mapping;
+                    })(),
+                };
+            })
         ;
 
         $index1->expects($this->once())->method('create')->with(['mapping'], []);

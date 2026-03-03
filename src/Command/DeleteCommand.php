@@ -41,7 +41,7 @@ class DeleteCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $indexName = $input->getOption('index');
-        $indexes = null === $indexName ? \array_keys($this->indexManager->getAllIndexes()) : [$indexName];
+        $indexes = null === $indexName ? array_keys($this->indexManager->getAllIndexes()) : [$indexName];
 
         foreach ($indexes as $indexName) {
             $output->writeln(

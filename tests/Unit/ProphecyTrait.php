@@ -13,7 +13,7 @@ namespace FOS\ElasticaBundle\Tests\Unit;
 
 use Prophecy\PhpUnit\ProphecyTrait as BaseProphecyTrait;
 
-if (\trait_exists(BaseProphecyTrait::class)) {
+if (trait_exists(BaseProphecyTrait::class)) {
     trait ProphecyTrait
     {
         use BaseProphecyTrait;

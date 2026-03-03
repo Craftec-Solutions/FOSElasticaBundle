@@ -85,7 +85,7 @@ class PopulateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $indexes = (null !== $index = $input->getOption('index')) ? [$index] : \array_keys($this->indexManager->getAllIndexes());
+        $indexes = (null !== $index = $input->getOption('index')) ? [$index] : array_keys($this->indexManager->getAllIndexes());
         $reset = !$input->getOption('no-reset');
         $delete = !$input->getOption('no-delete');
 
@@ -169,7 +169,7 @@ class PopulateCommand extends Command
         $provider = $this->pagerProviderRegistry->getProvider($index);
         $pager = $provider->provide($options);
 
-        $this->pagerPersister->insert($pager, \array_merge($options, ['indexName' => $index]));
+        $this->pagerPersister->insert($pager, array_merge($options, ['indexName' => $index]));
 
         $consoleLogger->finish();
         $this->dispatcher->removeListener(OnExceptionEvent::class, $exceptionListener);

@@ -32,7 +32,7 @@ final class MongoDBPagerProvider implements PagerProviderInterface
 
     public function provide(array $options = []): PagerInterface
     {
-        $options = \array_replace($this->baseOptions, $options);
+        $options = array_replace($this->baseOptions, $options);
 
         $manager = $this->doctrine->getManagerForClass($this->objectClass);
         $repository = $manager->getRepository($this->objectClass);

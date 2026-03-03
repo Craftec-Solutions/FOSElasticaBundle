@@ -140,7 +140,7 @@ class FOSElasticaExtensionTest extends TestCase
 
     public function testShouldRegisterDoctrineMongoDBPagerProviderIfEnabled(): void
     {
-        if (!\class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
+        if (!class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
             $this->markTestSkipped('Doctrine MongoDB ODM is not available.');
         }
 
@@ -205,7 +205,7 @@ class FOSElasticaExtensionTest extends TestCase
 
     public function testShouldRegisterDoctrinePHPCRPagerProviderIfEnabled(): void
     {
-        if (!\class_exists(\Doctrine\ODM\PHPCR\DocumentManager::class)) {
+        if (!class_exists(\Doctrine\ODM\PHPCR\DocumentManager::class)) {
             $this->markTestSkipped('Doctrine PHPCR is not present');
         }
 

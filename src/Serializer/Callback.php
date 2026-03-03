@@ -30,7 +30,7 @@ class Callback
     {
         $this->serializer = $serializer;
 
-        if (!\method_exists($this->serializer, 'serialize')) {
+        if (!method_exists($this->serializer, 'serialize')) {
             throw new \RuntimeException('The serializer must have a "serialize" method.');
         }
 

@@ -52,7 +52,7 @@ class ModelToElasticaAutoTransformer implements ModelToElasticaTransformerInterf
         array $options = [],
         protected ?EventDispatcherInterface $dispatcher = null,
     ) {
-        $this->options = \array_merge($this->options, $options);
+        $this->options = array_merge($this->options, $options);
     }
 
     /**
@@ -83,7 +83,7 @@ class ModelToElasticaAutoTransformer implements ModelToElasticaTransformerInterf
      */
     protected function transformNested($objects, array $fields): ?array
     {
-        if (\is_iterable($objects)) {
+        if (is_iterable($objects)) {
             $documents = [];
             foreach ($objects as $object) {
                 $document = $this->transformObjectToDocument($object, $fields);
@@ -121,9 +121,9 @@ class ModelToElasticaAutoTransformer implements ModelToElasticaTransformerInterf
             }
         };
 
-        if (\is_iterable($value)) {
-            $value = \is_array($value) ? $value : \iterator_to_array($value, false);
-            \array_walk_recursive($value, $normalizeValue);
+        if (is_iterable($value)) {
+            $value = \is_array($value) ? $value : iterator_to_array($value, false);
+            array_walk_recursive($value, $normalizeValue);
         } else {
             $normalizeValue($value);
         }

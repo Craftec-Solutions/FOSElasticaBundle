@@ -28,7 +28,7 @@ class AliasProcessor
             \sprintf(
                 '%s_%s',
                 $indexConfig->getElasticSearchName(),
-                \date('Y-m-d-His')
+                date('Y-m-d-His')
             )
         );
     }
@@ -166,16 +166,16 @@ class AliasProcessor
                 continue;
             }
 
-            $aliases = \array_keys($indexInfo['aliases']);
+            $aliases = array_keys($indexInfo['aliases']);
             if (\in_array($aliasName, $aliases, true)) {
                 $aliasedIndexes[] = $indexName;
             }
         }
 
         if (\count($aliasedIndexes) > 1) {
-            throw new \RuntimeException(\sprintf('Alias "%s" is used for multiple indexes: ["%s"]. Make sure it\'s either not used or is assigned to one index only', $aliasName, \implode('", "', $aliasedIndexes)));
+            throw new \RuntimeException(\sprintf('Alias "%s" is used for multiple indexes: ["%s"]. Make sure it\'s either not used or is assigned to one index only', $aliasName, implode('", "', $aliasedIndexes)));
         }
 
-        return \array_shift($aliasedIndexes);
+        return array_shift($aliasedIndexes);
     }
 }

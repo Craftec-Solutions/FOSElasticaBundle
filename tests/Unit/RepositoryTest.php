@@ -82,7 +82,7 @@ class RepositoryTest extends TestCase
         $finderMock = $this->createMock(TransformedFinder::class);
         $finderMock->expects($this->once())
             ->method($name)
-            ->withConsecutive($arguments)
+            ->with(...$arguments)
         ;
 
         return $finderMock;

@@ -80,13 +80,13 @@ class FOSElasticaExtension extends Extension
         }
 
         if (empty($config['default_client'])) {
-            $keys = \array_keys($config['clients']);
-            $config['default_client'] = \reset($keys);
+            $keys = array_keys($config['clients']);
+            $config['default_client'] = reset($keys);
         }
 
         if (empty($config['default_index'])) {
-            $keys = \array_keys($config['indexes']);
-            $config['default_index'] = \reset($keys);
+            $keys = array_keys($config['indexes']);
+            $config['default_index'] = reset($keys);
         }
 
         if ($this->isConfigEnabled($container, $config['messenger'])) {
@@ -116,8 +116,8 @@ class FOSElasticaExtension extends Extension
         ;
         $container->setParameter('fos_elastica.default_index', $config['default_index']);
 
-        if ($usedIndexNames = \array_intersect_key($config['indexes'], $config['index_templates'])) {
-            throw new \DomainException(\sprintf('Index names "%s" are already in use and can not be used for index templates names', \implode('","', \array_keys($usedIndexNames))));
+        if ($usedIndexNames = array_intersect_key($config['indexes'], $config['index_templates'])) {
+            throw new \DomainException(\sprintf('Index names "%s" are already in use and can not be used for index templates names', implode('","', array_keys($usedIndexNames))));
         }
         $this->loadIndexTemplates($config['index_templates'], $container);
 
@@ -174,7 +174,7 @@ class FOSElasticaExtension extends Extension
                 'transport_config' => [
                     'http_client' => isset($clientConfig['http_client']) ? new Reference($clientConfig['http_client']) : null,
                     'http_client_config' => $httpsClientConfig,
-                    'http_client_options' => \array_replace(
+                    'http_client_options' => array_replace(
                         [
                             'headers' => $clientConfig['headers'],
                             'timeout' => $clientConfig['timeout'],
@@ -355,7 +355,7 @@ class FOSElasticaExtension extends Extension
      */
     private function loadIndexConfig(array $index, array &$indexConfig): void
     {
-        $indexConfig = \array_merge($indexConfig, [
+        $indexConfig = array_merge($indexConfig, [
             'mapping' => [], // An array containing anything that gets sent directly to ElasticSearch
             'config' => [],
         ]);
@@ -412,7 +412,7 @@ class FOSElasticaExtension extends Extension
 
     private function transformServiceReference($classOrService)
     {
-        return \str_starts_with($classOrService, '@') ? new Reference(\substr($classOrService, 1)) : $classOrService;
+        return str_starts_with($classOrService, '@') ? new Reference(substr($classOrService, 1)) : $classOrService;
     }
 
     /**
@@ -486,7 +486,7 @@ class FOSElasticaExtension extends Extension
         $serviceDef->addTag('fos_elastica.elastica_to_model_transformer', ['index' => $indexName]);
 
         $serviceDef->replaceArgument(1, $persistenceConfig['model']);
-        $serviceDef->replaceArgument(2, \array_merge($persistenceConfig['elastica_to_model_transformer'], [
+        $serviceDef->replaceArgument(2, array_merge($persistenceConfig['elastica_to_model_transformer'], [
             'identifier' => $persistenceConfig['identifier'],
         ]));
         $container->setDefinition($serviceId, $serviceDef);
@@ -548,7 +548,7 @@ class FOSElasticaExtension extends Extension
             $arguments[] = $argument;
         }
 
-        $arguments[] = \array_intersect_key($config['persister'], \array_flip(['refresh']));
+        $arguments[] = array_intersect_key($config['persister'], array_flip(['refresh']));
 
         $serviceId = \sprintf('fos_elastica.object_persister.%s', $indexName);
         $serviceDef = new ChildDefinition($abstractId);
@@ -688,7 +688,7 @@ class FOSElasticaExtension extends Extension
 
         foreach ($eventMapping as $event => $doctrineEvents) {
             if (isset($indexConfig['listener'][$event]) && $indexConfig['listener'][$event]) {
-                $events = \array_merge($events, $doctrineEvents);
+                $events = array_merge($events, $doctrineEvents);
             }
         }
 
@@ -740,7 +740,7 @@ class FOSElasticaExtension extends Extension
      */
     private function loadIndexManager(ContainerBuilder $container): void
     {
-        $indexRefs = \array_map(static fn (array $index): mixed => $index['reference'], $this->indexConfigs);
+        $indexRefs = array_map(static fn (array $index): mixed => $index['reference'], $this->indexConfigs);
 
         $managerDef = $container->getDefinition('fos_elastica.index_manager');
         $managerDef->replaceArgument(0, $indexRefs);
@@ -751,7 +751,7 @@ class FOSElasticaExtension extends Extension
      */
     private function loadIndexTemplateManager(ContainerBuilder $container): void
     {
-        $indexTemplateRefs = \array_map(static fn (array $index): mixed => $index['reference'], $this->indexTemplateConfigs);
+        $indexTemplateRefs = array_map(static fn (array $index): mixed => $index['reference'], $this->indexTemplateConfigs);
 
         $managerDef = $container->getDefinition('fos_elastica.index_template_manager');
         $managerDef->replaceArgument(0, $indexTemplateRefs);
@@ -785,7 +785,7 @@ class FOSElasticaExtension extends Extension
         $serializer = $container->getDefinition('fos_elastica.serializer_callback_prototype');
         $serializer->setClass($config['callback_class']);
 
-        if (\class_exists('Symfony\Component\DependencyInjection\ContainerAwareInterface') && \is_subclass_of($config['callback_class'], ContainerAwareInterface::class)) {
+        if (class_exists('Symfony\Component\DependencyInjection\ContainerAwareInterface') && is_subclass_of($config['callback_class'], ContainerAwareInterface::class)) {
             $serializer->addMethodCall('setContainer', [new Reference('service_container')]);
         }
     }
@@ -834,7 +834,7 @@ class FOSElasticaExtension extends Extension
      */
     private function registerMessengerConfiguration(array $config, ContainerBuilder $container, PhpFileLoader $loader): void
     {
-        if (!\interface_exists(MessageBusInterface::class)) {
+        if (!interface_exists(MessageBusInterface::class)) {
             throw new LogicException('Messenger support cannot be enabled as the Messenger component is not installed. Try running "composer require symfony/messenger".');
         }
 

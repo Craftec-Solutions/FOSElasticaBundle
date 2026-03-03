@@ -20,7 +20,7 @@ class ListenerTestCase extends AbstractListenerTestCase
 {
     protected function setUp(): void
     {
-        if (!\class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
+        if (!class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
             $this->markTestSkipped('Doctrine MongoDB ODM is not available.');
         }
     }

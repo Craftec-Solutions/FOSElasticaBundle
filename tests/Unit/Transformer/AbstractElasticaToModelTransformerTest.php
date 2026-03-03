@@ -32,7 +32,8 @@ class AbstractElasticaToModelTransformerTest extends UnitTestHelper
     {
         return $this
             ->getMockBuilder(AbstractElasticaToModelTransformer::class)
-            ->getMockForAbstractClass()
+            ->onlyMethods(['transform', 'hybridTransform', 'getObjectClass', 'getIdentifierField'])
+            ->getMock()
         ;
     }
 

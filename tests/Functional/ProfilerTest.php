@@ -54,7 +54,7 @@ class ProfilerTest extends WebTestCase
         $fragmentHandlerMock = $this->createMock(FragmentHandler::class);
         $loaderMock = $this->createMock(RuntimeLoaderInterface::class);
 
-        if (\class_exists('Symfony\Bridge\Twig\Extension\CodeExtension')) {
+        if (class_exists('Symfony\Bridge\Twig\Extension\CodeExtension')) {
             $this->twig->addExtension(new CodeExtension('', '', ''));
         }
 
@@ -86,7 +86,7 @@ class ProfilerTest extends WebTestCase
             'profile_type' => 'request',
         ]);
 
-        $output = \str_replace('&quot;', '"', $output);
+        $output = str_replace('&quot;', '"', $output);
 
         $this->assertStringContainsString('{"query":{"match_all":', $output);
         $this->assertStringContainsString('index/_search', $output);
@@ -96,7 +96,7 @@ class ProfilerTest extends WebTestCase
     public static function queryProvider()
     {
         return [
-            [\json_decode('{"query":{"match_all":{}}}', true)],
+            [json_decode('{"query":{"match_all":{}}}', true)],
             ['{"query":{"match_all":{}}}'],
         ];
     }

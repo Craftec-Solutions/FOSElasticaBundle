@@ -77,7 +77,7 @@ class RepositoryManager implements RepositoryManagerInterface
 
     private function createRepository(string $indexName): Repository
     {
-        if (!\class_exists($repositoryName = $this->getRepositoryName($indexName))) {
+        if (!class_exists($repositoryName = $this->getRepositoryName($indexName))) {
             throw new \RuntimeException(\sprintf('%s repository for index "%s" does not exist', $repositoryName, $indexName));
         }
 

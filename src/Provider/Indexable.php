@@ -129,7 +129,7 @@ class Indexable implements IndexableInterface
      */
     private function getExpressionLanguage(): ?ExpressionLanguage
     {
-        if (null === $this->expressionLanguage && \class_exists(ExpressionLanguage::class)) {
+        if (null === $this->expressionLanguage && class_exists(ExpressionLanguage::class)) {
             $this->expressionLanguage = new ExpressionLanguage();
         }
 
@@ -150,6 +150,6 @@ class Indexable implements IndexableInterface
 
         $ref = new \ReflectionClass($object);
 
-        return \strtolower($ref->getShortName());
+        return strtolower($ref->getShortName());
     }
 }

@@ -47,7 +47,7 @@ class CreateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $indexes = (null !== $index = $input->getOption('index')) ? [$index] : \array_keys($this->indexManager->getAllIndexes());
+        $indexes = (null !== $index = $input->getOption('index')) ? [$index] : array_keys($this->indexManager->getAllIndexes());
 
         foreach ($indexes as $indexName) {
             $output->writeln(\sprintf('<info>Creating</info> <comment>%s</comment>', $indexName));

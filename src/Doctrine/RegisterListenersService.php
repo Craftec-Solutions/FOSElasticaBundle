@@ -31,7 +31,7 @@ class RegisterListenersService
      */
     public function register(ObjectManager $manager, PagerInterface $pager, array $options): void
     {
-        $options = \array_replace([
+        $options = array_replace([
             'clear_object_manager' => true,
             'debug_logging' => false,
             'sleep' => 0,
@@ -45,7 +45,7 @@ class RegisterListenersService
 
         if ($options['sleep']) {
             $this->addListener($pager, PostInsertObjectsEvent::class, static function () use ($options): void {
-                \usleep($options['sleep']);
+                usleep($options['sleep']);
             });
         }
 
@@ -54,7 +54,7 @@ class RegisterListenersService
             && $manager instanceof EntityManagerInterface
         ) {
             $configuration = $manager->getConnection()->getConfiguration();
-            if (\method_exists($configuration, 'getSQLLogger') && \method_exists($configuration, 'setSQLLogger')) {
+            if (method_exists($configuration, 'getSQLLogger') && method_exists($configuration, 'setSQLLogger')) {
                 $logger = $configuration->getSQLLogger();
 
                 $this->addListener($pager, PreFetchObjectsEvent::class, static function () use ($configuration): void {

@@ -20,7 +20,7 @@ class ListenerTestCase extends AbstractListenerTestCase
 {
     protected function setUp(): void
     {
-        if (!\class_exists(\Doctrine\ODM\PHPCR\DocumentManager::class)) {
+        if (!class_exists(\Doctrine\ODM\PHPCR\DocumentManager::class)) {
             $this->markTestSkipped('Doctrine PHPCR is not present');
         }
     }

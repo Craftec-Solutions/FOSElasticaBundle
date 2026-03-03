@@ -31,6 +31,6 @@ class TypeObject
 
     public function getSerializableColl(): array
     {
-        return \iterator_to_array($this->coll, false);
+        return iterator_to_array($this->coll, false);
     }
 }

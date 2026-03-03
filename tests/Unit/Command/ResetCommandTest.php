@@ -53,12 +53,15 @@ class ResetCommandTest extends TestCase
             ->willReturn(['index1' => true, 'index2' => true])
         ;
 
-        $this->resetter->expects($this->exactly(2))
+        $matcher = $this->exactly(2);
+        $this->resetter->expects($matcher)
             ->method('resetIndex')
-            ->withConsecutive(
-                [$this->equalTo('index1')],
-                [$this->equalTo('index2')]
-            )
+            ->willReturnCallback(function (string $indexName) use ($matcher): void {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertSame('index1', $indexName),
+                    2 => $this->assertSame('index2', $indexName),
+                };
+            })
         ;
 
         $this->command->run(

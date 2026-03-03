@@ -43,7 +43,7 @@ class WebTestCase extends BaseKernelTestCase
 
     protected static function deleteTmpDir(): void
     {
-        if (!\file_exists($dir = \sys_get_temp_dir().'/'.static::getVarDir())) {
+        if (!file_exists($dir = sys_get_temp_dir().'/'.static::getVarDir())) {
             return;
         }
         $fs = new Filesystem();
@@ -62,13 +62,13 @@ class WebTestCase extends BaseKernelTestCase
             static::getVarDir(),
             $options['test_case'],
             $options['root_config'] ?? 'config.php',
-            $options['environment'] ?? \strtolower(static::getVarDir().$options['test_case']),
+            $options['environment'] ?? strtolower(static::getVarDir().$options['test_case']),
             $options['debug'] ?? true
         );
     }
 
     protected static function getVarDir(): string
     {
-        return \substr(\strrchr(static::class, '\\'), 1);
+        return substr(strrchr(static::class, '\\'), 1);
     }
 }

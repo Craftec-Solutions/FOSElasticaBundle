@@ -49,16 +49,16 @@ class IndexTemplateManagerTest extends TestCase
             ],
             'expected template found' => [
                 'templates' => [
-                    'first template' => $firstTemplate = $this->createStub(IndexTemplate::class),
-                    'second template' => $secondTemplate = $this->createStub(IndexTemplate::class),
+                    'first template' => $firstTemplate = static::createStub(IndexTemplate::class),
+                    'second template' => $secondTemplate = static::createStub(IndexTemplate::class),
                 ],
                 'name' => 'second template',
                 'expectedTemplate' => $secondTemplate,
             ],
             'expected template not found' => [
                 'templates' => [
-                    'first template' => $firstTemplate = $this->createStub(IndexTemplate::class),
-                    'second template' => $secondTemplate = $this->createStub(IndexTemplate::class),
+                    'first template' => $firstTemplate = static::createStub(IndexTemplate::class),
+                    'second template' => $secondTemplate = static::createStub(IndexTemplate::class),
                 ],
                 'name' => 'some template',
                 'expectedTemplate' => null,

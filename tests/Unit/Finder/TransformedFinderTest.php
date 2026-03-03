@@ -76,7 +76,6 @@ class TransformedFinderTest extends TestCase
         $finder = new TransformedFinder($searchable, $transformer);
 
         $method = new \ReflectionMethod($finder, 'search');
-        $method->setAccessible(true);
 
         $results = $method->invoke($finder, '', 10);
 

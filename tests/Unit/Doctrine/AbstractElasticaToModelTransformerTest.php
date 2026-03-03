@@ -162,7 +162,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('resultsWithMatchingObjects')]
     public function testResultsAreSortedByIdentifier($elasticaResults, $doctrineObjects): void
     {
-        \rsort($doctrineObjects);
+        rsort($doctrineObjects);
 
         $transformer = $this->createMockTransformer();
 
@@ -245,10 +245,10 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $objectClass = Foo::class;
         $propertyAccessor = $this->createMockPropertyAccessor();
 
-        $transformer = $this->getMockForAbstractClass(
-            AbstractElasticaToModelTransformer::class,
-            [$this->registry, $objectClass, $options]
-        );
+        $transformer = $this->getMockBuilder(AbstractElasticaToModelTransformer::class)
+            ->setConstructorArgs([$this->registry, $objectClass, $options])
+            ->onlyMethods(['findByIdentifiers'])
+            ->getMock();
 
         $transformer->setPropertyAccessor($propertyAccessor);
 

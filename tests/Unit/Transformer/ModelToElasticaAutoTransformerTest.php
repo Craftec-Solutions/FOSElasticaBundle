@@ -44,7 +44,7 @@ class POPO3
         $this->date = new \DateTime('1979-05-05');
         $this->duration = new \DateInterval('P1Y1M1DT1H1M1S');
         $this->file = new \SplFileInfo(__DIR__.'/fixtures/attachment.odt');
-        $this->fileContents = \file_get_contents(__DIR__.'/fixtures/attachment.odt');
+        $this->fileContents = file_get_contents(__DIR__.'/fixtures/attachment.odt');
     }
 
     public function getId()
@@ -182,16 +182,17 @@ class ModelToElasticaAutoTransformerTest extends TestCase
     {
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $dispatcher->expects($this->exactly(2))
+        $matcher = $this->exactly(2);
+        $dispatcher->expects($matcher)
             ->method('dispatch')
-            ->withConsecutive(
-                [
-                    $this->isInstanceOf(PreTransformEvent::class),
-                ],
-                [
-                    $this->isInstanceOf(PostTransformEvent::class),
-                ]
-            )
+            ->willReturnCallback(function (object $event) use ($matcher): object {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertInstanceOf(PreTransformEvent::class, $event),
+                    2 => $this->assertInstanceOf(PostTransformEvent::class, $event),
+                };
+
+                return $event;
+            })
         ;
 
         $transformer = $this->getTransformer($dispatcher);
@@ -314,7 +315,7 @@ class ModelToElasticaAutoTransformerTest extends TestCase
         $document = $transformer->transform(new POPO3(), ['file' => ['type' => 'attachment']]);
         $data = $document->getData();
 
-        $this->assertSame(\base64_encode(\file_get_contents(__DIR__.'/fixtures/attachment.odt')), $data['file']);
+        $this->assertSame(base64_encode(file_get_contents(__DIR__.'/fixtures/attachment.odt')), $data['file']);
     }
 
     public function testFileContentsAddedForAttachmentMapping(): void
@@ -324,7 +325,7 @@ class ModelToElasticaAutoTransformerTest extends TestCase
         $data = $document->getData();
 
         $this->assertSame(
-            \base64_encode(\file_get_contents(__DIR__.'/fixtures/attachment.odt')),
+            base64_encode(file_get_contents(__DIR__.'/fixtures/attachment.odt')),
             $data['fileContents']
         );
     }

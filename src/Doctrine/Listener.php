@@ -61,7 +61,7 @@ class Listener
         array $config = [],
         ?LoggerInterface $logger = null,
     ) {
-        $this->config = \array_merge([
+        $this->config = array_merge([
             'identifier' => 'id',
             'defer' => false,
         ], $config);

@@ -46,7 +46,7 @@ abstract class AbstractElasticaToModelTransformer extends BaseTransformer
          */
         protected string $objectClass, array $options = [])
     {
-        $this->options = \array_merge($this->options, $options);
+        $this->options = array_merge($this->options, $options);
     }
 
     /**
@@ -79,9 +79,9 @@ abstract class AbstractElasticaToModelTransformer extends BaseTransformer
         $propertyAccessor = $this->propertyAccessor;
         $identifier = $this->options['identifier'];
         if (!$this->options['ignore_missing'] && $objectsCnt < $elasticaObjectsCnt) {
-            $missingIds = \array_diff($ids, \array_map(static fn ($object): mixed => $propertyAccessor->getValue($object, $identifier), $objects));
+            $missingIds = array_diff($ids, array_map(static fn ($object): mixed => $propertyAccessor->getValue($object, $identifier), $objects));
 
-            throw new \RuntimeException(\sprintf('Cannot find corresponding Doctrine objects (%d) for all Elastica results (%d). Missing IDs: %s. IDs: %s', $objectsCnt, $elasticaObjectsCnt, \implode(', ', $missingIds), \implode(', ', $ids)));
+            throw new \RuntimeException(\sprintf('Cannot find corresponding Doctrine objects (%d) for all Elastica results (%d). Missing IDs: %s. IDs: %s', $objectsCnt, $elasticaObjectsCnt, implode(', ', $missingIds), implode(', ', $ids)));
         }
 
         foreach ($objects as $object) {
@@ -92,10 +92,10 @@ abstract class AbstractElasticaToModelTransformer extends BaseTransformer
         }
 
         // sort objects in the order of ids
-        $idPos = \array_flip($ids);
-        \usort(
+        $idPos = array_flip($ids);
+        usort(
             $objects,
-            function (array $a, array $b) use ($idPos, $identifier, $propertyAccessor): int {
+            function (object|array $a, object|array $b) use ($idPos, $identifier, $propertyAccessor): int {
                 if ($this->options['hydrate']) {
                     return $idPos[(string) $propertyAccessor->getValue(
                         $a,

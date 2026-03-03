@@ -67,19 +67,19 @@ class Client extends BaseClient implements ResetInterface
     {
         $this->stopwatch?->start('es_request', 'fos_elastica');
 
-        $path = \ltrim($request->getUri()->getPath(), '/'); // to have the same result as in the 6.0
+        $path = ltrim($request->getUri()->getPath(), '/'); // to have the same result as in the 6.0
         $method = $request->getMethod();
         try {
-            $data = \json_decode((string) $request->getBody(), true, 512, \JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $request->getBody(), true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             $data = [];
         }
         $query = [];
-        \parse_str($request->getUri()->getQuery(), $query);
+        parse_str($request->getUri()->getQuery(), $query);
 
         $this->dispatcher?->dispatch(new PreElasticaRequestEvent($path, $method, $data, $query, $request->getHeaderLine('Content-Type')));
 
-        $start = \microtime(true);
+        $start = microtime(true);
         try {
             $elasticResponse = parent::sendRequest($request);
             $response = $this->toElasticaResponse($elasticResponse);
@@ -106,7 +106,7 @@ class Client extends BaseClient implements ResetInterface
 
             throw $e;
         }
-        $end = \microtime(true);
+        $end = microtime(true);
 
         $responseData = $response->getData();
 

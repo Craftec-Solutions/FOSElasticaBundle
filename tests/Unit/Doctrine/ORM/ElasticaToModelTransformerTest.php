@@ -16,8 +16,8 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 use FOS\ElasticaBundle\Doctrine\ORM\ElasticaToModelTransformer;
+use FOS\ElasticaBundle\Tests\Unit\Mocks\DoctrineORMCustomRepositoryMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -39,7 +39,7 @@ class ElasticaToModelTransformerTest extends TestCase
     protected $manager;
 
     /**
-     * @var ObjectRepository&MockObject
+     * @var DoctrineORMCustomRepositoryMock&MockObject
      */
     protected $repository;
 
@@ -55,10 +55,11 @@ class ElasticaToModelTransformerTest extends TestCase
         ;
 
         $this->repository = $this
-            ->getMockBuilder(ObjectRepository::class)
+            ->getMockBuilder(DoctrineORMCustomRepositoryMock::class)
+            ->disableOriginalConstructor()
             ->onlyMethods([
-                'customQueryBuilderCreator',
                 'createQueryBuilder',
+                'customQueryBuilderCreator',
                 'find',
                 'findAll',
                 'findBy',
@@ -97,7 +98,6 @@ class ElasticaToModelTransformerTest extends TestCase
 
         $class = new \ReflectionClass(ElasticaToModelTransformer::class);
         $method = $class->getMethod('getEntityQueryBuilder');
-        $method->setAccessible(true);
 
         $method->invokeArgs($transformer, []);
     }
@@ -123,7 +123,6 @@ class ElasticaToModelTransformerTest extends TestCase
 
         $class = new \ReflectionClass(ElasticaToModelTransformer::class);
         $method = $class->getMethod('getEntityQueryBuilder');
-        $method->setAccessible(true);
 
         $method->invokeArgs($transformer, []);
     }
@@ -136,7 +135,7 @@ class ElasticaToModelTransformerTest extends TestCase
         $query = $this->getMockBuilder(Query::class)
             ->onlyMethods(['setHint', 'execute', 'setHydrationMode'])
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
         $query->expects($this->any())->method('setHydrationMode')->willReturnSelf();
         $query->expects($this->any())->method('execute')->willReturn([]);
@@ -165,7 +164,6 @@ class ElasticaToModelTransformerTest extends TestCase
 
         $class = new \ReflectionClass(ElasticaToModelTransformer::class);
         $method = $class->getMethod('findByIdentifiers');
-        $method->setAccessible(true);
 
         $method->invokeArgs($transformer, [[1, 2, 3], /* $hydrate */ true]);
     }

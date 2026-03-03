@@ -46,15 +46,32 @@ class FilterObjectsListenerTest extends TestCase
         $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
 
         $indexableMock = $this->createIndexableMock();
+        $matcher = $this->exactly(3);
         $indexableMock
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('isObjectIndexable')
-            ->withConsecutive(
-                ['theIndex', $this->identicalTo($objects[0])],
-                ['theIndex', $this->identicalTo($objects[1])],
-                ['theIndex', $this->identicalTo($objects[2])]
-            )
-            ->willReturn(false)
+            ->willReturnCallback(function (string $indexName, object $object) use ($matcher, $objects): bool {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => (function () use ($indexName, $object, $objects): bool {
+                        $this->assertSame('theIndex', $indexName);
+                        $this->assertSame($objects[0], $object);
+
+                        return false;
+                    })(),
+                    2 => (function () use ($indexName, $object, $objects): bool {
+                        $this->assertSame('theIndex', $indexName);
+                        $this->assertSame($objects[1], $object);
+
+                        return false;
+                    })(),
+                    3 => (function () use ($indexName, $object, $objects): bool {
+                        $this->assertSame('theIndex', $indexName);
+                        $this->assertSame($objects[2], $object);
+
+                        return false;
+                    })(),
+                };
+            })
         ;
 
         $listener = new FilterObjectsListener($indexableMock);
@@ -76,15 +93,32 @@ class FilterObjectsListenerTest extends TestCase
         $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
 
         $indexableMock = $this->createIndexableMock();
+        $matcher = $this->exactly(3);
         $indexableMock
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('isObjectIndexable')
-            ->withConsecutive(
-                ['theIndex', $this->identicalTo($objects[0])],
-                ['theIndex', $this->identicalTo($objects[1])],
-                ['theIndex', $this->identicalTo($objects[2])]
-            )
-            ->willReturnOnConsecutiveCalls(true, false, true)
+            ->willReturnCallback(function (string $indexName, object $object) use ($matcher, $objects): bool {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => (function () use ($indexName, $object, $objects): bool {
+                        $this->assertSame('theIndex', $indexName);
+                        $this->assertSame($objects[0], $object);
+
+                        return true;
+                    })(),
+                    2 => (function () use ($indexName, $object, $objects): bool {
+                        $this->assertSame('theIndex', $indexName);
+                        $this->assertSame($objects[1], $object);
+
+                        return false;
+                    })(),
+                    3 => (function () use ($indexName, $object, $objects): bool {
+                        $this->assertSame('theIndex', $indexName);
+                        $this->assertSame($objects[2], $object);
+
+                        return true;
+                    })(),
+                };
+            })
         ;
 
         $listener = new FilterObjectsListener($indexableMock);

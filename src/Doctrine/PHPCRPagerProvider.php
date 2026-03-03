@@ -36,7 +36,7 @@ final class PHPCRPagerProvider implements PagerProviderInterface
 
     public function provide(array $options = []): PagerInterface
     {
-        $options = \array_replace($this->baseOptions, $options);
+        $options = array_replace($this->baseOptions, $options);
 
         /** @var DocumentManagerInterface $manager */
         $manager = $this->doctrine->getManagerForClass($this->objectClass);

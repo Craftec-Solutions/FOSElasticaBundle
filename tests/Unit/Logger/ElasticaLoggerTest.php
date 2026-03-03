@@ -32,7 +32,7 @@ class ElasticaLoggerTest extends TestCase
     {
         $elasticaLogger = new ElasticaLogger(null, true);
 
-        $total = \random_int(1, 15);
+        $total = random_int(1, 15);
         for ($i = 0; $i < $total; ++$i) {
             $elasticaLogger->logQuery('testPath', 'testMethod', ['data'], 12);
         }
@@ -74,7 +74,7 @@ class ElasticaLoggerTest extends TestCase
     {
         $elasticaLogger = new ElasticaLogger(null, false);
 
-        $total = \random_int(1, 15);
+        $total = random_int(1, 15);
         for ($i = 0; $i < $total; ++$i) {
             $elasticaLogger->logQuery('testPath', 'testMethod', ['data'], 12);
         }

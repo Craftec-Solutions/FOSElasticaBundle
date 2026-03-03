@@ -72,17 +72,17 @@ class SearchCommand extends Command
         if ($showField) {
             $toString = $source[$showField] ?? '-';
         } else {
-            $toString = \reset($source);
+            $toString = reset($source);
         }
-        $string = \sprintf('[%0.2f] %s', $result->getScore(), \var_export($toString, true));
+        $string = \sprintf('[%0.2f] %s', $result->getScore(), var_export($toString, true));
         if ($showSource) {
-            $string = \sprintf('%s %s', $string, \json_encode($source));
+            $string = \sprintf('%s %s', $string, json_encode($source));
         }
         if ($showId) {
             $string = \sprintf('{%s} %s', $result->getId(), $string);
         }
         if ($explain) {
-            $string = \sprintf('%s %s', $string, \json_encode($result->getExplanation()));
+            $string = \sprintf('%s %s', $string, json_encode($result->getExplanation()));
         }
 
         return $string;

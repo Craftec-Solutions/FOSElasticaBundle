@@ -203,11 +203,27 @@ class ResetterTest extends TestCase
 
     private function dispatcherExpects(array $events): void
     {
-        $expectation = $this->dispatcher->expects($this->exactly(\count($events)))
+        $matcher = $this->exactly(\count($events));
+        $this->dispatcher->expects($matcher)
             ->method('dispatch')
-        ;
+            ->willReturnCallback(function (...$args) use ($matcher, $events) {
+                $expectedArgs = $events[$matcher->numberOfInvocations() - 1];
 
-        \call_user_func_array([$expectation, 'withConsecutive'], $events);
+                foreach ($expectedArgs as $index => $expectedArg) {
+                    $actualArg = $args[$index] ?? null;
+
+                    if ($expectedArg instanceof \PHPUnit\Framework\Constraint\Constraint) {
+                        $this->assertThat($actualArg, $expectedArg);
+
+                        continue;
+                    }
+
+                    $this->assertEquals($expectedArg, $actualArg);
+                }
+
+                return $args[0] ?? null;
+            })
+        ;
     }
 
     private function mockIndex(string $indexName, IndexConfig $config, array $mapping = []): Index&MockObject

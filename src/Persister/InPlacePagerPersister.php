@@ -36,7 +36,7 @@ final class InPlacePagerPersister implements PagerPersisterInterface
     {
         $pager->setMaxPerPage(empty($options['max_per_page']) ? 100 : $options['max_per_page']);
 
-        $options = \array_replace([
+        $options = array_replace([
             'max_per_page' => $pager->getMaxPerPage(),
             'first_page' => $pager->getCurrentPage(),
             'last_page' => $pager->getNbPages(),
@@ -51,7 +51,7 @@ final class InPlacePagerPersister implements PagerPersisterInterface
             $pager = $event->getPager();
             $options = $event->getOptions();
 
-            $lastPage = \min($options['last_page'], $pager->getNbPages());
+            $lastPage = min($options['last_page'], $pager->getNbPages());
             $page = $pager->getCurrentPage();
             do {
                 $pager->setCurrentPage($page);
@@ -81,7 +81,7 @@ final class InPlacePagerPersister implements PagerPersisterInterface
         $objects = $pager->getCurrentPageResults();
 
         if ($objects instanceof \Traversable) {
-            $objects = \iterator_to_array($objects);
+            $objects = iterator_to_array($objects);
         }
 
         $this->dispatcher->dispatch($event = new PreInsertObjectsEvent($pager, $objectPersister, $objects, $options));

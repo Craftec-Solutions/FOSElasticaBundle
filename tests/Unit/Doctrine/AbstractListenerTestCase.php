@@ -68,7 +68,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
         $listener->postPersist($eventArgs);
 
-        $this->assertSame($entity, \current($listener->scheduledForInsertion));
+        $this->assertSame($entity, current($listener->scheduledForInsertion));
 
         $persister->expects($this->once())
             ->method('insertMany')
@@ -88,7 +88,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index', 'defer' => true]);
         $listener->postPersist($eventArgs);
 
-        $this->assertSame($entity, \current($listener->scheduledForInsertion));
+        $this->assertSame($entity, current($listener->scheduledForInsertion));
 
         $persister->expects($this->never())->method('insertMany');
 
@@ -127,7 +127,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
         $listener->postUpdate($eventArgs);
 
-        $this->assertSame($entity, \current($listener->scheduledForUpdate));
+        $this->assertSame($entity, current($listener->scheduledForUpdate));
 
         $persister->expects($this->once())
             ->method('replaceMany')
@@ -166,7 +166,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener->postUpdate($eventArgs);
 
         $this->assertEmpty($listener->scheduledForUpdate);
-        $this->assertSame($entity->getId(), \current($listener->scheduledForDeletion));
+        $this->assertSame($entity->getId(), current($listener->scheduledForDeletion));
 
         $persister->expects($this->never())
             ->method('replaceOne')
@@ -204,7 +204,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
         $listener->preRemove($eventArgs);
 
-        $this->assertSame($entity->getId(), \current($listener->scheduledForDeletion));
+        $this->assertSame($entity->getId(), current($listener->scheduledForDeletion));
 
         $persister->expects($this->once())
             ->method('deleteManyByIdentifiers')
@@ -240,7 +240,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['identifier' => 'identifier', 'indexName' => 'index']);
         $listener->preRemove($eventArgs);
 
-        $this->assertSame($entity->identifier, \current($listener->scheduledForDeletion));
+        $this->assertSame($entity->identifier, current($listener->scheduledForDeletion));
 
         $persister->expects($this->once())
             ->method('deleteManyByIdentifiers')
@@ -263,7 +263,6 @@ abstract class AbstractListenerTestCase extends TestCase
         $scheduledForInsertion = ['data'];
         $refListener = new \ReflectionObject($listener);
         $refScheduledForInsertion = $refListener->getProperty('scheduledForInsertion');
-        $refScheduledForInsertion->setAccessible(true);
         $refScheduledForInsertion->setValue($listener, $scheduledForInsertion);
         $persister->expects($this->once())->method('insertMany')->with($scheduledForInsertion);
 
@@ -280,7 +279,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
         $listener->postPersist($eventArgs);
 
-        $this->assertSame($entity, \current($listener->scheduledForInsertion));
+        $this->assertSame($entity, current($listener->scheduledForInsertion));
 
         $persister->expects($this->once())
             ->method('insertMany')
@@ -319,7 +318,7 @@ abstract class AbstractListenerTestCase extends TestCase
         $listener = $this->createListener($persister, $indexable, ['indexName' => 'index']);
         $listener->postUpdate($eventArgs);
 
-        $this->assertSame($entity, \current($listener->scheduledForUpdate));
+        $this->assertSame($entity, current($listener->scheduledForUpdate));
 
         $persister->expects($this->once())
             ->method('replaceMany')

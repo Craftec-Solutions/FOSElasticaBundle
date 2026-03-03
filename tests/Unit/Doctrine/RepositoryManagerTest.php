@@ -53,7 +53,7 @@ class RepositoryManagerTest extends TestCase
         $mainManager = $this->createMock(RepositoryManagerInterface::class);
 
         // @link https://github.com/doctrine/persistence/pull/204
-        if (\method_exists(ManagerRegistry::class, 'getAliasNamespace')) {
+        if (method_exists(ManagerRegistry::class, 'getAliasNamespace')) {
             $registryMock->method('getAliasNamespace')
                 ->with($this->equalTo('FOSElasticaBundle'))
                 ->willReturn((new \ReflectionClass(NamespacedEntity::class))->getNamespaceName())

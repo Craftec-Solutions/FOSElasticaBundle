@@ -71,7 +71,7 @@ class RawPaginatorAdapter implements PaginatorAdapterInterface
         }
 
         return $this->query->hasParam('size') && !$genuineTotal
-            ? \min($this->totalHits, (int) $this->query->getParam('size'))
+            ? min($this->totalHits, (int) $this->query->getParam('size'))
             : $this->totalHits;
     }
 

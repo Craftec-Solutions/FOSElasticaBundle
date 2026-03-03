@@ -220,10 +220,17 @@ class InPlacePagerPersisterTest extends TestCase
         $objects = [$firstPage[0], $firstPage[1], $secondPage[0], $secondPage[1], $thirdPage[0], $thirdPage[1]];
 
         $objectPersisterMock = $this->createObjectPersisterMock();
+        $matcher = $this->exactly(3);
         $objectPersisterMock
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('insertMany')
-            ->withConsecutive([$this->identicalTo($firstPage)], [$this->identicalTo($secondPage)], [$this->identicalTo($thirdPage)])
+            ->willReturnCallback(function (array $page) use ($matcher, $firstPage, $secondPage, $thirdPage): void {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertSame($firstPage, $page),
+                    2 => $this->assertSame($secondPage, $page),
+                    3 => $this->assertSame($thirdPage, $page),
+                };
+            })
         ;
 
         $registryMock = $this->createPersisterRegistryStub($objectPersisterMock);

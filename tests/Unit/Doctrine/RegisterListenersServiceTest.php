@@ -139,12 +139,12 @@ class RegisterListenersServiceTest extends TestCase
             'sleep' => 2000000,
         ]);
 
-        $time = \microtime(true);
+        $time = microtime(true);
         $dispatcher->dispatch(
             new PostInsertObjectsEvent($pager, $this->createObjectPersisterMock(), [], [])
         );
 
-        $this->assertGreaterThan(1.5, \microtime(true) - $time);
+        $this->assertGreaterThan(1.5, microtime(true) - $time);
     }
 
     public function testShouldNotCallSleepListenerForAnotherPagers(): void
@@ -163,27 +163,30 @@ class RegisterListenersServiceTest extends TestCase
             'sleep' => 2000000,
         ]);
 
-        $time = \microtime(true);
+        $time = microtime(true);
         $dispatcher->dispatch(
             new PostInsertObjectsEvent($anotherPager, $this->createObjectPersisterMock(), [], [])
         );
 
-        $this->assertLessThan(1, \microtime(true) - $time);
+        $this->assertLessThan(1, microtime(true) - $time);
     }
 
     public function testShouldRegisterDisableDebugLoggingByDefaultForEntityManager(): void
     {
-        if (!\interface_exists('Doctrine\DBAL\Logging\SQLLogger')) {
+        if (!interface_exists('Doctrine\DBAL\Logging\SQLLogger')) {
             $this->markTestSkipped('This is only possible on doctrine/orm 2.');
         }
 
         $dispatcher = $this->createDispatcherMock();
-        $dispatcher->expects($this->exactly(2))
+        $matcher = $this->exactly(2);
+        $dispatcher->expects($matcher)
             ->method('addListener')
-            ->withConsecutive(
-                [PreFetchObjectsEvent::class, $this->isInstanceOf(\Closure::class)],
-                [PreInsertObjectsEvent::class, $this->isInstanceOf(\Closure::class)]
-            )
+            ->willReturnCallback(function (string $eventName, \Closure $listener) use ($matcher): void {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertSame(PreFetchObjectsEvent::class, $eventName),
+                    2 => $this->assertSame(PreInsertObjectsEvent::class, $eventName),
+                };
+            })
         ;
 
         $service = new RegisterListenersService($dispatcher);
@@ -238,7 +241,7 @@ class RegisterListenersServiceTest extends TestCase
 
     public function testShouldIgnoreDebugLoggingOptionForMongoDBDocumentManager(): void
     {
-        if (!\class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
+        if (!class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
             $this->markTestSkipped('Doctrine MongoDB ODM is not available.');
         }
 
@@ -263,7 +266,7 @@ class RegisterListenersServiceTest extends TestCase
 
     public function testShouldIgnoreDebugLoggingOptionForPHPCRManager(): void
     {
-        if (!\interface_exists(\Doctrine\ODM\PHPCR\DocumentManagerInterface::class)) {
+        if (!interface_exists(\Doctrine\ODM\PHPCR\DocumentManagerInterface::class)) {
             $this->markTestSkipped('Doctrine PHPCR is not present');
         }
 

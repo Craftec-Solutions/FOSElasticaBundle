@@ -54,7 +54,7 @@ class ClientTest extends TestCase
         $response = new \GuzzleHttp\Psr7\Response(
             200,
             ['Content-Type' => 'application/json', Elasticsearch::HEADER_CHECK => Elasticsearch::PRODUCT_NAME],
-            \json_encode(['foo' => 'bar'], \JSON_THROW_ON_ERROR)
+            json_encode(['foo' => 'bar'], \JSON_THROW_ON_ERROR)
         );
         $client = $this->getClient($logger, $response);
 
@@ -95,15 +95,15 @@ class ClientTest extends TestCase
 
                     $request = $o->getRequest();
 
-                    $path = \ltrim($request->getUri()->getPath(), '/'); // to have the same result as in the 6.0
+                    $path = ltrim($request->getUri()->getPath(), '/'); // to have the same result as in the 6.0
                     $method = $request->getMethod();
                     try {
-                        $data = \json_decode((string) $request->getBody(), true, 512, \JSON_THROW_ON_ERROR);
+                        $data = json_decode((string) $request->getBody(), true, 512, \JSON_THROW_ON_ERROR);
                     } catch (\JsonException) {
                         $data = [];
                     }
                     $query = [];
-                    \parse_str($request->getUri()->getQuery(), $query);
+                    parse_str($request->getUri()->getQuery(), $query);
 
                     $this->assertSame('event', $path);
                     $this->assertSame(Request::GET, $method);
@@ -121,7 +121,7 @@ class ClientTest extends TestCase
         $response = new \GuzzleHttp\Psr7\Response(
             200,
             ['Content-Type' => 'application/json', Elasticsearch::HEADER_CHECK => Elasticsearch::PRODUCT_NAME],
-            \json_encode(['foo' => 'bar'], \JSON_THROW_ON_ERROR)
+            json_encode(['foo' => 'bar'], \JSON_THROW_ON_ERROR)
         );
         $logger = $this->createMock(ElasticaLogger::class);
         $client = $this->getClient($logger, $response);
@@ -129,9 +129,9 @@ class ClientTest extends TestCase
 
         $client->sendRequest(new \GuzzleHttp\Psr7\Request(
             Request::GET,
-            'https://some.tld/event?'.\http_build_query(['query' => 'data']),
+            'https://some.tld/event?'.http_build_query(['query' => 'data']),
             ['Content-Type' => 'application/json'],
-            \json_encode(['some' => 'data'], \JSON_THROW_ON_ERROR)
+            json_encode(['some' => 'data'], \JSON_THROW_ON_ERROR)
         ));
     }
 
@@ -174,15 +174,15 @@ class ClientTest extends TestCase
 
                     $request = $o->getRequest();
 
-                    $path = \ltrim($request->getUri()->getPath(), '/'); // to have the same result as in the 6.0
+                    $path = ltrim($request->getUri()->getPath(), '/'); // to have the same result as in the 6.0
                     $method = $request->getMethod();
                     try {
-                        $data = \json_decode((string) $request->getBody(), true, 512, \JSON_THROW_ON_ERROR);
+                        $data = json_decode((string) $request->getBody(), true, 512, \JSON_THROW_ON_ERROR);
                     } catch (\JsonException) {
                         $data = [];
                     }
                     $query = [];
-                    \parse_str($request->getUri()->getQuery(), $query);
+                    parse_str($request->getUri()->getQuery(), $query);
 
                     $this->assertSame('event', $path);
                     $this->assertSame(Request::GET, $method);
@@ -201,9 +201,9 @@ class ClientTest extends TestCase
         $this->expectException(ClientException::class);
         $client->sendRequest(new \GuzzleHttp\Psr7\Request(
             Request::GET,
-            'https://some.tld/event?'.\http_build_query(['query' => 'data']),
+            'https://some.tld/event?'.http_build_query(['query' => 'data']),
             ['Content-Type' => 'application/json'],
-            \json_encode(['some' => 'data'], \JSON_THROW_ON_ERROR)
+            json_encode(['some' => 'data'], \JSON_THROW_ON_ERROR)
         ));
     }
 

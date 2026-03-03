@@ -42,7 +42,7 @@ class ElasticaToModelTransformerTest extends TestCase
 
     protected function setUp(): void
     {
-        if (!\class_exists(DocumentManager::class)) {
+        if (!class_exists(DocumentManager::class)) {
             $this->markTestSkipped('Doctrine PHPCR is not present');
         }
 
@@ -58,7 +58,6 @@ class ElasticaToModelTransformerTest extends TestCase
             ->getMockBuilder(DocumentRepository::class)
             ->disableOriginalConstructor()
             ->onlyMethods([
-                'customQueryBuilderCreator',
                 'createQueryBuilder',
                 'find',
                 'findAll',
@@ -92,7 +91,6 @@ class ElasticaToModelTransformerTest extends TestCase
 
         $class = new \ReflectionClass(ElasticaToModelTransformer::class);
         $method = $class->getMethod('findByIdentifiers');
-        $method->setAccessible(true);
 
         $method->invokeArgs($transformer, [
             ['c8f23994-d897-4c77-bcc3-bc6910e52a34', 'f1083287-a67e-480e-a426-e8427d00eae4'],
