@@ -22,10 +22,6 @@ return (new PhpCsFixer\Config())
         '@Symfony:risky' => true,
         'declare_strict_types' => false,
         'header_comment' => ['header' => $header],
-        'native_constant_invocation' => true,
-        'native_function_invocation' => [
-            'include' => ['@all'],
-        ],
         'no_useless_else' => true,
         'no_useless_return' => true,
         'single_line_empty_body' => true,

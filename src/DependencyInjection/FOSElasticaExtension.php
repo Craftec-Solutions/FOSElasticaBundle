@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -68,7 +68,7 @@ class FOSElasticaExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         if (empty($config['clients']) || empty($config['indexes'])) {
             // No Clients or indexes are defined
@@ -76,7 +76,7 @@ class FOSElasticaExtension extends Extension
         }
 
         foreach (['config', 'index', 'persister', 'provider', 'source', 'transformer', 'event_listener', 'commands'] as $basename) {
-            $loader->load(\sprintf('%s.xml', $basename));
+            $loader->load(\sprintf('%s.php', $basename));
         }
 
         if (empty($config['default_client'])) {
@@ -94,7 +94,7 @@ class FOSElasticaExtension extends Extension
         }
 
         if (isset($config['serializer'])) {
-            $loader->load('serializer.xml');
+            $loader->load('serializer.php');
 
             $this->loadSerializer($config['serializer'], $container);
         }
@@ -766,8 +766,8 @@ class FOSElasticaExtension extends Extension
             return;
         }
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load($driver.'.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load($driver.'.php');
         $this->loadedDrivers[] = $driver;
     }
 
@@ -832,13 +832,13 @@ class FOSElasticaExtension extends Extension
     /**
      * @param array<string, mixed> $config
      */
-    private function registerMessengerConfiguration(array $config, ContainerBuilder $container, XmlFileLoader $loader): void
+    private function registerMessengerConfiguration(array $config, ContainerBuilder $container, PhpFileLoader $loader): void
     {
         if (!\interface_exists(MessageBusInterface::class)) {
             throw new LogicException('Messenger support cannot be enabled as the Messenger component is not installed. Try running "composer require symfony/messenger".');
         }
 
-        $loader->load('messenger.xml');
+        $loader->load('messenger.php');
 
         $container->setAlias('fos_elastica.messenger.bus', $config['bus']);
     }

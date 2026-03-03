@@ -61,7 +61,7 @@ class WebTestCase extends BaseKernelTestCase
         return new $class(
             static::getVarDir(),
             $options['test_case'],
-            $options['root_config'] ?? 'config.yml',
+            $options['root_config'] ?? 'config.php',
             $options['environment'] ?? \strtolower(static::getVarDir().$options['test_case']),
             $options['debug'] ?? true
         );

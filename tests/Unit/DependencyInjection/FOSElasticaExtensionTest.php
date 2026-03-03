@@ -24,9 +24,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @internal
@@ -35,13 +34,15 @@ class FOSElasticaExtensionTest extends TestCase
 {
     public function testExtensionSupportsDriverlessTypePersistence(): void
     {
-        $config = Yaml::parse(\file_get_contents(__DIR__.'/fixtures/driverless_type.yml'));
-
         $containerBuilder = new ContainerBuilder();
+        $containerBuilder->registerExtension($extension = new FOSElasticaExtension());
         $containerBuilder->setParameter('kernel.debug', true);
 
-        $extension = new FOSElasticaExtension();
-        $extension->load($config, $containerBuilder);
+        $loader = new PhpFileLoader($containerBuilder, new FileLocator(__DIR__.'/fixtures'));
+        $loader->load('driverless_type.php');
+
+        $extensionConfig = $containerBuilder->getExtensionConfig($extension->getAlias());
+        $extension->load($extensionConfig, $containerBuilder);
 
         $this->assertTrue($containerBuilder->hasDefinition('fos_elastica.index.test_index'));
         $this->assertFalse($containerBuilder->hasDefinition('fos_elastica.elastica_to_model_transformer.test_index'));
@@ -54,8 +55,8 @@ class FOSElasticaExtensionTest extends TestCase
         $containerBuilder->registerExtension($extension = new FOSElasticaExtension());
         $containerBuilder->setParameter('kernel.debug', true);
 
-        $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__.'/fixtures'));
-        $loader->load('config.yml');
+        $loader = new PhpFileLoader($containerBuilder, new FileLocator(__DIR__.'/fixtures'));
+        $loader->load('config.php');
 
         $extensionConfig = $containerBuilder->getExtensionConfig($extension->getAlias());
         $extension->load($extensionConfig, $containerBuilder);
