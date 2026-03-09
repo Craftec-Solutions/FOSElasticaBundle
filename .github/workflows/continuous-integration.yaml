@@ -1,9 +1,25 @@
 name: 'Continuous integration'
-on: ['push', 'pull_request']
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref }}'
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  COMPOSER_NO_INTERACTION: 1
+
 jobs:
   cs:
     runs-on: 'ubuntu-latest'
     name: 'Coding style'
+
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v4'
@@ -15,38 +31,44 @@ jobs:
           coverage: 'none'
           extensions: 'json, mbstring, tokenizer'
           tools: 'composer-normalize, php-cs-fixer:3.94.2'
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: 'Display tools versions'
+      - name: 'Display tool versions'
         run: |
           composer-normalize --version
           php-cs-fixer --version
 
-      - name: 'Check PHP code'
+      - name: 'Check PHP code style'
         run: 'php-cs-fixer fix --diff --dry-run --allow-risky=yes --using-cache=no'
 
-      - name: 'Check composer.json'
-        run: 'composer-normalize --diff --dry-run --no-update-lock'
+      - name: 'Check composer.json normalization'
         if: 'always()'
+        run: 'composer-normalize --diff --dry-run --no-update-lock'
 
-  phpunit:
-    runs-on: 'ubuntu-24.04'
-    name: 'PHPUnit (PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }} + ${{ matrix.dependencies }} deps, ES ${{ matrix.elasticsearch }})'
+  phpstan:
+    runs-on: 'ubuntu-latest'
+    name: 'PHPStan (PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }})'
+    needs: ['cs']
     timeout-minutes: 10
+
     env:
-      SYMFONY_REQUIRE: "${{ matrix.symfony }}"
+      SYMFONY_REQUIRE: '${{ matrix.symfony }}'
+
     strategy:
       matrix:
         php:
           - '8.2'
           - '8.3'
           - '8.4'
+          - '8.5'
+          - '8.6'
         symfony:
           - '7.4.*'
-        elasticsearch:
-          - '8.12.0'
         dependencies:
           - 'highest'
       fail-fast: false
+
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v4'
@@ -56,66 +78,103 @@ jobs:
         with:
           php-version: '${{ matrix.php }}'
           coverage: 'none'
-          tools: 'pecl, composer:v2, flex'
+          tools: 'composer:v2, flex'
           extensions: 'curl, json, mbstring, mongodb, openssl'
-
-      - name: "Install Composer dependencies (${{ matrix.dependencies }})"
-        uses: "ramsey/composer-install@v3"
-        with:
-            dependency-versions: "${{ matrix.dependencies }}"
-            composer-options: "--prefer-dist --prefer-stable"
-
-      - name: 'Setup Elasticsearch'
         env:
-          ES_VERSION: "${{ matrix.elasticsearch }}"
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: 'Install Composer dependencies (${{ matrix.dependencies }})'
+        uses: 'ramsey/composer-install@v3'
+        with:
+          dependency-versions: '${{ matrix.dependencies }}'
+          composer-options: '--prefer-dist --prefer-stable --no-progress'
+
+      - name: 'Run PHPStan'
+        run: 'composer sca'
+
+  phpunit:
+    runs-on: 'ubuntu-24.04'
+    name: 'PHPUnit (PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}, ES ${{ matrix.elasticsearch }})'
+    needs: ['cs']
+    timeout-minutes: 10
+
+    env:
+      SYMFONY_REQUIRE: '${{ matrix.symfony }}'
+
+    strategy:
+      matrix:
+        php:
+          - '8.2'
+          - '8.3'
+          - '8.4'
+          - '8.5'
+          - '8.6'
+        symfony:
+          - '7.4.*'
+        elasticsearch:
+          - '8.19.11'
+        dependencies:
+          - 'highest'
+        include:
+          - php: '8.2'
+            symfony: '7.4.*'
+            elasticsearch: '8.19.11'
+            dependencies: 'lowest'
+      fail-fast: false
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+
+      - name: 'Setup PHP'
+        uses: 'shivammathur/setup-php@v2'
+        with:
+          php-version: '${{ matrix.php }}'
+          coverage: 'none'
+          tools: 'composer:v2, flex'
+          extensions: 'curl, json, mbstring, mongodb, openssl'
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: 'Install Composer dependencies (${{ matrix.dependencies }})'
+        uses: 'ramsey/composer-install@v3'
+        with:
+          dependency-versions: '${{ matrix.dependencies }}'
+          composer-options: '--prefer-dist --prefer-stable --no-progress'
+
+      - name: 'Configure kernel for Elasticsearch'
         run: |
           sudo swapoff -a
           sudo sysctl -w vm.swappiness=1
           sudo sysctl -w fs.file-max=262144
           sudo sysctl -w vm.max_map_count=262144
-          docker compose --file=.github/docker/compose.proxy.yaml --file=.github/docker/compose.es.yaml up --detach
 
-          docker run --rm --network=docker_elastic curlimages/curl --max-time 120 --retry-max-time 120 --retry 120 --retry-delay 5 --retry-all-errors --show-error --silent http://elasticsearch:9200
-
-      - name: 'Run unit tests'
-        run: |
-          vendor/bin/phpunit
-
-  phpstan:
-    runs-on: 'ubuntu-latest'
-    name: 'PHPStan (PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }} + ${{ matrix.dependencies }} deps)'
-    timeout-minutes: 10
-    env:
-      SYMFONY_REQUIRE: "${{ matrix.symfony }}"
-    strategy:
-      matrix:
-        php:
-          - '8.2'
-          - '8.3'
-          - '8.4'
-        symfony:
-          - '7.4.*'
-        dependencies:
-          - 'highest'
-      fail-fast: false
-    steps:
-      - name: 'Checkout'
-        uses: 'actions/checkout@v4'
-
-      - name: 'Setup PHP'
-        uses: 'shivammathur/setup-php@v2'
+      - name: 'Cache Docker image layers'
+        uses: 'actions/cache@v4'
         with:
-          php-version: '${{ matrix.php }}'
-          coverage: 'none'
-          tools: 'pecl, composer:v2, flex'
-          extensions: 'curl, json, mbstring, mongodb, openssl'
+          path: '/tmp/docker-images'
+          key: 'docker-es-${{ matrix.elasticsearch }}'
 
-      - name: "Install Composer dependencies (${{ matrix.dependencies }})"
-        uses: "ramsey/composer-install@v3"
-        with:
-          dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "--prefer-dist --prefer-stable"
-
-      - name: 'Run PHPStan'
+      - name: 'Start Elasticsearch'
+        env:
+          ES_VERSION: '${{ matrix.elasticsearch }}'
         run: |
-          composer sca
+          docker compose \
+            --file=.github/docker/compose.proxy.yaml \
+            --file=.github/docker/compose.es.yaml \
+            up --detach --wait || true
+
+          # Wait until the ES HTTP API is reachable (up to 120 s)
+          timeout 120 bash -c \
+            'until curl --silent --fail http://localhost:9200; do sleep 2; done'
+
+      - name: 'Run PHPUnit'
+        run: 'vendor/bin/phpunit --no-coverage'
+
+      - name: 'Stop Elasticsearch'
+        if: 'always()'
+        run: |
+          docker compose \
+            --file=.github/docker/compose.proxy.yaml \
+            --file=.github/docker/compose.es.yaml \
+            down --volumes
