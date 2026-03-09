@@ -62,7 +62,6 @@ jobs:
           - '8.3'
           - '8.4'
           - '8.5'
-          - '8.6'
         symfony:
           - '7.4.*'
         dependencies:
@@ -108,17 +107,16 @@ jobs:
           - '8.3'
           - '8.4'
           - '8.5'
-          - '8.6'
         symfony:
           - '7.4.*'
         elasticsearch:
-          - '8.19.11'
+          - '8.19.12'
         dependencies:
           - 'highest'
         include:
           - php: '8.2'
             symfony: '7.4.*'
-            elasticsearch: '8.19.11'
+            elasticsearch: '8.19.12'
             dependencies: 'lowest'
       fail-fast: false
 
