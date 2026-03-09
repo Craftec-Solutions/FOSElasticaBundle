@@ -47,6 +47,7 @@
         "doctrine/orm": "^3.6",
         "doctrine/phpcr-odm": "^2.1",
         "ergebnis/composer-normalize": "^2.50",
+        "guzzlehttp/guzzle": "^7.10",
         "jackalope/jackalope-doctrine-dbal": "^2.0",
         "jms/serializer": "^3.32",
         "jms/serializer-bundle": "^5.5",
@@ -62,8 +63,7 @@
         "symfony/serializer": "^7.4",
         "symfony/twig-bundle": "^7.4",
         "symfony/web-profiler-bundle": "^7.4",
-        "symfony/yaml": "^7.4",
-        "guzzlehttp/guzzle": "^7.10"
+        "symfony/yaml": "^7.4"
     },
     "replace": {
         "symfony/polyfill-php80": "*",
