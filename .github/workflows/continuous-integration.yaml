@@ -94,7 +94,7 @@ jobs:
           - '8.3'
           - '8.4'
         symfony:
-          - '7.1.*'
+          - '7.4.*'
         dependencies:
           - 'highest'
         include:
