@@ -65,11 +65,6 @@
         "symfony/web-profiler-bundle": "^7.4",
         "symfony/yaml": "^7.4"
     },
-    "replace": {
-        "symfony/polyfill-php80": "*",
-        "symfony/polyfill-php81": "*",
-        "symfony/polyfill-php82": "*"
-    },
     "suggest": {
         "enqueue/elastica-bundle": "For populating Elasticsearch indexes asynchronously and using significanly less resources. Uses Enqueue.",
         "symfony/messenger": "For populating Elasticsearch indexes asynchronously and using significanly less resources."
