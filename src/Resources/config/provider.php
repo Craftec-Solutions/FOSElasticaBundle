@@ -17,5 +17,6 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set('fos_elastica.pager_provider_registry', PagerProviderRegistry::class)
-        ->args([tagged_locator('fos_elastica.pager_provider', 'index')]);
+        ->args([\tagged_locator('fos_elastica.pager_provider', 'index')])
+    ;
 };

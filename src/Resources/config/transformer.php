@@ -21,12 +21,14 @@ return static function (ContainerConfigurator $container): void {
         ->abstract()
         ->args([
             [],
-            service('event_dispatcher'),
+            \service('event_dispatcher'),
         ])
-        ->call('setPropertyAccessor', [service('fos_elastica.property_accessor')]);
+        ->call('setPropertyAccessor', [\service('fos_elastica.property_accessor')])
+    ;
 
     $services->set('fos_elastica.model_to_elastica_identifier_transformer', ModelToElasticaIdentifierTransformer::class)
         ->abstract()
         ->args([[]])
-        ->call('setPropertyAccessor', [service('fos_elastica.property_accessor')]);
+        ->call('setPropertyAccessor', [\service('fos_elastica.property_accessor')])
+    ;
 };

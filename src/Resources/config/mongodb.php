@@ -23,36 +23,41 @@ return static function (ContainerConfigurator $container): void {
     $services->set('fos_elastica.pager_provider.prototype.mongodb', MongoDBPagerProvider::class)
         ->abstract()
         ->args([
-            service('doctrine_mongodb'),
-            service('fos_elastica.doctrine.register_listeners'),
-            abstract_arg('model'),
+            \service('doctrine_mongodb'),
+            \service('fos_elastica.doctrine.register_listeners'),
+            \abstract_arg('model'),
             [],
-        ]);
+        ])
+    ;
 
     $services->set('fos_elastica.doctrine.register_listeners', RegisterListenersService::class)
-        ->args([service('event_dispatcher')]);
+        ->args([\service('event_dispatcher')])
+    ;
 
     $services->set('fos_elastica.listener.prototype.mongodb', Listener::class)
         ->abstract()
         ->args([
-            abstract_arg('object persister'),
-            service('fos_elastica.indexable'),
+            \abstract_arg('object persister'),
+            \service('fos_elastica.indexable'),
             [],
             null,
-        ]);
+        ])
+    ;
 
     $services->set('fos_elastica.elastica_to_model_transformer.prototype.mongodb', ElasticaToModelTransformer::class)
         ->abstract()
         ->args([
-            service('doctrine_mongodb'),
-            abstract_arg('model'),
+            \service('doctrine_mongodb'),
+            \abstract_arg('model'),
             [],
         ])
-        ->call('setPropertyAccessor', [service('fos_elastica.property_accessor')]);
+        ->call('setPropertyAccessor', [\service('fos_elastica.property_accessor')])
+    ;
 
     $services->set('fos_elastica.manager.mongodb', RepositoryManager::class)
         ->args([
-            service('doctrine_mongodb'),
-            service('fos_elastica.repository_manager'),
-        ]);
+            \service('doctrine_mongodb'),
+            \service('fos_elastica.repository_manager'),
+        ])
+    ;
 };

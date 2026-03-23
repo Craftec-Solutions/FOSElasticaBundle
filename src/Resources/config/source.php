@@ -19,9 +19,11 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set('fos_elastica.config_source.container', ContainerSource::class)
         ->args([[]])
-        ->tag('fos_elastica.config_source');
+        ->tag('fos_elastica.config_source')
+    ;
 
     $services->set('fos_elastica.config_source.template_container', TemplateContainerSource::class)
         ->args([[]])
-        ->tag('fos_elastica.config_source', ['source' => 'index_template']);
+        ->tag('fos_elastica.config_source', ['source' => 'index_template'])
+    ;
 };

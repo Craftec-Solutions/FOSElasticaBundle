@@ -16,5 +16,6 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set('fos_elastica.serializer_callback_prototype')
         ->abstract()
-        ->call('setSerializer', [service('fos_elastica.serializer')]);
+        ->call('setSerializer', [\service('fos_elastica.serializer')])
+    ;
 };
